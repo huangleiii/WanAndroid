@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WanAndroid</string>
+
+    <string name="open_drawer">打开</string>
+    <string name="close_drawer">关闭</string>
+
+    <string name="title_page_home">首页</string>
+    <string name="title_page_knowledge">知识体系</string>
+    <string name="title_page_weixin">公众号</string>
+    <string name="title_page_navigation">导航</string>
+    <string name="title_page_project">项目</string>
+
+    <string name="behavior_bottomnavigationview_hide">com.huanglei.wanandroid.widget.BottomNavigationViewBehavior</string>
+
+</resources>

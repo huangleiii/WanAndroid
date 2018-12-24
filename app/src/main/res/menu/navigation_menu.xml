@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/favorite_navigation_menu"
+        android:icon="@drawable/ic_favorite_border_white_24dp"
+        android:title="我的收藏" />
+    <item
+        android:id="@+id/todo_navigation_menu"
+        android:icon="@drawable/ic_event_note_black_24dp"
+        android:title="TODO工具" />
+    <item
+        android:id="@+id/set_navigation_menu"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="设置" />
+    <item
+        android:id="@+id/about_navigation_menu"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:title="关于我们" />
+    <item
+        android:id="@+id/logout_navigation_menu"
+        android:icon="@drawable/ic_power_settings_new_black_24dp"
+        android:title="退出登录"
+        android:visible="false"/>
+</menu>

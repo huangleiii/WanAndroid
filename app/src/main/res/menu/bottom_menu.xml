@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_bottom_menu"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/title_page_home"/>
+    <item
+        android:id="@+id/knowledge_bottom_menu"
+        android:icon="@drawable/ic_widgets_black_24dp"
+        android:title="@string/title_page_knowledge"/>
+    <item
+        android:id="@+id/weixin_bottom_menu"
+        android:icon="@drawable/ic_group_black_24dp"
+        android:title="@string/title_page_weixin"/>
+    <item
+        android:id="@+id/navigation_bottom_menu"
+        android:icon="@drawable/ic_navigation_black_24dp"
+        android:title="@string/title_page_navigation"/>
+    <item
+        android:id="@+id/project_bottom_menu"
+        android:icon="@drawable/ic_work_black_24dp"
+        android:title="@string/title_page_project"/>
+</menu>
