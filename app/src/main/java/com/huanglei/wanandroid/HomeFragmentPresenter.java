@@ -2,7 +2,11 @@ package com.huanglei.wanandroid;
 
 import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
 import com.huanglei.wanandroid.contract.HomeFragmentContract;
-import com.huanglei.wanandroid.event.UnLogin;
+import com.huanglei.wanandroid.event.CancelCollectEvent;
+import com.huanglei.wanandroid.event.CollectEvent;
+import com.huanglei.wanandroid.event.LoginEvent;
+import com.huanglei.wanandroid.event.LoginExpiredEvent;
+import com.huanglei.wanandroid.event.LogoutEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.bean.Article;
 import com.huanglei.wanandroid.model.bean.BannerData;
@@ -12,9 +16,13 @@ import com.huanglei.wanandroid.model.http.HttpHelper;
 import com.huanglei.wanandroid.utils.ErrorConsumer;
 import com.huanglei.wanandroid.utils.RxUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import retrofit2.http.HTTP;
 
 /**
  * Created by HuangLei on 2018/11/19.
@@ -100,10 +108,10 @@ public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.
                     @Override
                     protected void onError(int errorCode, String errorMessage) {
                         if (errorCode == BaseResponse.LOGIN_FAILED) {
-                            RxBus.getInstance().post(new UnLogin());
+                            RxBus.getInstance().post(new LoginExpiredEvent());
                         }
                         if (isViewAttached()) {
-                            getView().showCollectFailed(errorMessage);
+                            getView().showCollectFailed(position, errorMessage);
                         }
                     }
                 }));
@@ -125,10 +133,10 @@ public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.
                     @Override
                     protected void onError(int errorCode, String errorMessage) {
                         if (errorCode == BaseResponse.LOGIN_FAILED) {
-                            RxBus.getInstance().post(new UnLogin());
+                            RxBus.getInstance().post(new LoginExpiredEvent());
                         }
                         if (isViewAttached()) {
-                            getView().showCancelCollectFailed(errorMessage);
+                            getView().showCancelCollectFailed(position, errorMessage);
                         }
                     }
                 }));
@@ -137,5 +145,45 @@ public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.
 
     @Override
     protected void registerEvent() {
+        addDisposable(RxBus.getInstance()
+                .toObservable(CancelCollectEvent.class)
+                .subscribe(new Consumer<CancelCollectEvent>() {
+                    @Override
+                    public void accept(CancelCollectEvent cancelCollectEvent) throws Exception {
+                        if (isViewAttached()) {
+                            getView().showCancelCollectEvent(cancelCollectEvent.getPosition());
+                        }
+                    }
+                }));
+        addDisposable(RxBus.getInstance()
+                .toObservable(CollectEvent.class)
+                .subscribe(new Consumer<CollectEvent>() {
+                    @Override
+                    public void accept(CollectEvent collectEvent) throws Exception {
+                        if (isViewAttached()) {
+                            getView().showCollectEvent(collectEvent.getPosition());
+                        }
+                    }
+                }));
+        addDisposable(RxBus.getInstance()
+                .toObservable(LoginEvent.class)
+                .subscribe(new Consumer<LoginEvent>() {
+                    @Override
+                    public void accept(LoginEvent loginEvent) throws Exception {
+                        if(isViewAttached()){
+                            getView().showLoginEvent();
+                        }
+                    }
+                }));
+        addDisposable(RxBus.getInstance()
+                .toObservable(LogoutEvent.class)
+                .subscribe(new Consumer<LogoutEvent>() {
+                    @Override
+                    public void accept(LogoutEvent logoutEvent) throws Exception {
+                        if(isViewAttached()){
+                            getView().showLogoutEvent();
+                        }
+                    }
+                }));
     }
 }

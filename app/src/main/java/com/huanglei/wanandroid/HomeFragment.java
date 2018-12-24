@@ -89,8 +89,12 @@ public class HomeFragment extends StateBaseFragment<HomeFragmentContract.Present
                     case R.id.img_collect_item_fragment_home:
                     case R.id.img_collect_item_fragment_project:
                         if(((Article)adapter.getItem(position)).isCollect()){
+                            mHomeAdapter.getItem(position).setCollect(false);
+                            mHomeAdapter.notifyItemChanged(position+1);
                             getPresenter().cancelCollect(position,adapter.getData());
                         }else {
+                            mHomeAdapter.getItem(position).setCollect(true);
+                            mHomeAdapter.notifyItemChanged(position+1);
                             getPresenter().collect(position,adapter.getData());
                         }
                         break;
@@ -108,6 +112,7 @@ public class HomeFragment extends StateBaseFragment<HomeFragmentContract.Present
                 bundle.putString(ArticleDetailActivity.ARTICLE_TITLE,((Article)adapter.getItem(position)).getTitle());
                 bundle.putString(ArticleDetailActivity.ARTICLE_LINK,((Article)adapter.getItem(position)).getLink());
                 bundle.putBoolean(ArticleDetailActivity.ARTICLE_IS_COLLECTED,((Article)adapter.getItem(position)).isCollect());
+                bundle.putInt(ArticleDetailActivity.ARTICLE_POSITION,position);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -150,6 +155,7 @@ public class HomeFragment extends StateBaseFragment<HomeFragmentContract.Present
         }
         CommonUtils.showToastMessage(getActivity(), errorMsg);
     }
+
     @Override
     public void showNewBannerDataSucceed(List<BannerData> bannerDatas) {
         List<String> titles = new ArrayList<>();
@@ -212,29 +218,53 @@ public class HomeFragment extends StateBaseFragment<HomeFragmentContract.Present
 
     @Override
     public void showCollectSucceed(int position, List<Article> articles) {
-        mHomeAdapter.getItem(position).setCollect(true);
-        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
-        mHomeAdapter.notifyItemChanged(position+1);//这里要加1是因为要把recyclerView的headerView算上。
         CommonUtils.showToastMessage(getActivity(),"收藏成功");
     }
 
     @Override
-    public void showCollectFailed(String errorMsg) {
+    public void showCollectFailed(int position,String errorMsg) {
+        mHomeAdapter.getItem(position).setCollect(false);
+        mHomeAdapter.notifyItemChanged(position+1);
         CommonUtils.showToastMessage(getActivity(),errorMsg);
     }
 
     @Override
     public void showCancelCollectSucceed(int position, List<Article> articles) {
-        mHomeAdapter.getItem(position).setCollect(false);
-        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));//这里要加1是因为要把recyclerView的headerView算上。
-        mHomeAdapter.notifyItemChanged(position+1);
         CommonUtils.showToastMessage(getActivity(),"取消收藏成功");
     }
 
     @Override
-    public void showCancelCollectFailed(String errorMsg) {
+    public void showCancelCollectFailed(int position,String errorMsg) {
+        mHomeAdapter.getItem(position).setCollect(true);
+        mHomeAdapter.notifyItemChanged(position+1);
         CommonUtils.showToastMessage(getActivity(),errorMsg);
 
+    }
+
+    @Override
+    public void showCancelCollectEvent(int position) {
+        mHomeAdapter.getItem(position).setCollect(false);
+//        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
+        mHomeAdapter.notifyItemChanged(position+1);//这里要加1是因为要把recyclerView的headerView算上。
+    }
+
+    @Override
+    public void showCollectEvent(int position) {
+        mHomeAdapter.getItem(position).setCollect(true);
+//        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
+        mHomeAdapter.notifyItemChanged(position+1);//这里要加1是因为要把recyclerView的headerView算上。
+    }
+
+    @Override
+    public void showLoginEvent() {
+        mHomeAdapter.setEnableLoadMore(false);
+        normal.autoRefresh();
+    }
+
+    @Override
+    public void showLogoutEvent() {
+        mHomeAdapter.setEnableLoadMore(false);
+        normal.autoRefresh();
     }
 
 }

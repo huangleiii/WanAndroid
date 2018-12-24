@@ -158,7 +158,7 @@ public class LoginActivity extends CommonBaseActivity<LoginActivityContract.Pres
     @Override
     public void loginSucceed(Account account) {
         mMyProgressDialog.dismiss();
-        CommonUtils.showToastMessage(this, "登录成功！");
+        CommonUtils.showToastMessage(this, "登录成功");
         finish();
     }
 
@@ -172,7 +172,7 @@ public class LoginActivity extends CommonBaseActivity<LoginActivityContract.Pres
     @Override
     public void registerSucceed(Account account) {
         mMyProgressDialog.dismiss();
-        CommonUtils.showToastMessage(this, "注册成功！");
+        CommonUtils.showToastMessage(this, "注册成功");
         showLogIn();
     }
 

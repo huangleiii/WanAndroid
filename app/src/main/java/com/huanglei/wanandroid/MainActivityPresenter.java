@@ -3,7 +3,7 @@ package com.huanglei.wanandroid;
 import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.event.LoginEvent;
-import com.huanglei.wanandroid.event.UnLogin;
+import com.huanglei.wanandroid.event.LoginExpiredEvent;
 import com.huanglei.wanandroid.event.LogoutEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
@@ -63,10 +63,10 @@ public class MainActivityPresenter extends RxBasePresenter<MainActivityContract.
                             getView().subscribeLoginEvent();
                     }
                 }));
-        addDisposable(RxBus.getInstance().toObservable(UnLogin.class)
-                .subscribe(new Consumer<UnLogin>() {
+        addDisposable(RxBus.getInstance().toObservable(LoginExpiredEvent.class)
+                .subscribe(new Consumer<LoginExpiredEvent>() {
                     @Override
-                    public void accept(UnLogin unLogin) throws Exception {
+                    public void accept(LoginExpiredEvent loginExpiredEvent) throws Exception {
                         if(isViewAttached())
                             getView().subscribeUnLoginEvent();
                     }

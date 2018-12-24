@@ -9,14 +9,14 @@ import com.huanglei.wanandroid.base.view.IBaseView;
 
 public interface ArticleDetailActivityContract {
     interface Presenter extends IBasePresenter<View>{
-        void collect(int id);
-        void cancelCollect(int id);
+        void collect(int position,int id);
+        void cancelCollect(int position,int id);
     }
     interface View extends IBaseView{
         void showCollectSucceed();
-        void showCollectFailed();
+        void showCollectFailed(String errorMsg);
 
         void showCancelCollectSucceed();
-        void showCancleCollectFailed();
+        void showCancelCollectFailed(String errorMsg);
     }
 }

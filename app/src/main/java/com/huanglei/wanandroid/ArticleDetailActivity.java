@@ -41,6 +41,8 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
     private int articleId;
     public static final String ARTICLE_IS_COLLECTED = "article is collected";
     private boolean articleIsCollected;
+    public static final String ARTICLE_POSITION="this article's position";
+    private int articlePosition;
     private WebView webView;
 
     @Override
@@ -50,22 +52,26 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
 
     @Override
     public void showCollectSucceed() {
-
+        CommonUtils.showToastMessage(this,"收藏成功");
     }
 
     @Override
-    public void showCollectFailed() {
-
+    public void showCollectFailed(String errorMsg) {
+        articleIsCollected=false;
+        supportInvalidateOptionsMenu();
+        CommonUtils.showToastMessage(this,errorMsg);
     }
 
     @Override
     public void showCancelCollectSucceed() {
-
+        CommonUtils.showToastMessage(this,"取消收藏成功");
     }
 
     @Override
-    public void showCancleCollectFailed() {
-
+    public void showCancelCollectFailed(String errorMsg) {
+        articleIsCollected=true;
+        supportInvalidateOptionsMenu();
+        CommonUtils.showToastMessage(this,errorMsg);
     }
 
     @Override
@@ -130,6 +136,7 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
             articleLink = bundle.getString(ARTICLE_LINK);
             articleId = bundle.getInt(ARTICLE_ID);
             articleIsCollected = bundle.getBoolean(ARTICLE_IS_COLLECTED);
+            articlePosition=bundle.getInt(ARTICLE_POSITION);
         }
     }
 
@@ -197,8 +204,10 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
             case R.id.favorite_detail_menu:
                 if(articleIsCollected){
                     articleIsCollected=false;
+                    getPresenter().cancelCollect(articlePosition,articleId);
                 }else {
                     articleIsCollected=true;
+                    getPresenter().collect(articlePosition,articleId);
                 }
                 supportInvalidateOptionsMenu();
                 break;

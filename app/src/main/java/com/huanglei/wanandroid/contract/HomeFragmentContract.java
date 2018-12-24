@@ -35,10 +35,15 @@ public interface HomeFragmentContract {
         void showAddListDataFailed(String errorMsg);
 
         void showCollectSucceed(int position, List<Article> articles);
-        void showCollectFailed(String errorMsg);
+        void showCollectFailed(int position,String errorMsg);
 
         void showCancelCollectSucceed(int position, List<Article> articles);
-        void showCancelCollectFailed(String errorMsg);
+        void showCancelCollectFailed(int position,String errorMsg);
+
+        void showCancelCollectEvent(int position);
+        void showCollectEvent(int position);
+        void showLoginEvent();
+        void showLogoutEvent();
     }
 
 }
