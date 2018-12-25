@@ -4,7 +4,7 @@ package com.huanglei.wanandroid.model.bean;
  * Created by HuangLei on 2018/11/25.
  */
 
-public class BannerData {
+public class Banner {
     private String desc;
     private int id;
     private String imagePath;

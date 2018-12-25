@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
  * Created by HuangLei on 2018/11/19.
  */
 
-public abstract class BasePresenter<T extends IBaseView> implements IBasePresenter<T> {
+public abstract class MVPBasePresenter<T extends IBaseView> implements IBasePresenter<T> {
     private WeakReference<T> mWeakView;
 
     @Override

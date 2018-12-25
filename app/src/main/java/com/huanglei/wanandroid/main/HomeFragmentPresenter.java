@@ -1,6 +1,6 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
-import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
+import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.HomeFragmentContract;
 import com.huanglei.wanandroid.event.CancelCollectEvent;
 import com.huanglei.wanandroid.event.CollectEvent;
@@ -9,37 +9,33 @@ import com.huanglei.wanandroid.event.LoginExpiredEvent;
 import com.huanglei.wanandroid.event.LogoutEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.bean.Article;
-import com.huanglei.wanandroid.model.bean.BannerData;
+import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
-import com.huanglei.wanandroid.model.bean.HomeArticleListData;
+import com.huanglei.wanandroid.model.bean.HomeArticleList;
 import com.huanglei.wanandroid.model.http.HttpHelper;
 import com.huanglei.wanandroid.utils.ErrorConsumer;
 import com.huanglei.wanandroid.utils.RxUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import retrofit2.http.HTTP;
 
 /**
  * Created by HuangLei on 2018/11/19.
  */
 
-public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.View> implements HomeFragmentContract.Presenter {
+public class HomeFragmentPresenter extends RxMVPBasePresenter<HomeFragmentContract.View> implements HomeFragmentContract.Presenter {
     @Override
     public void getListData() {
         addDisposable(HttpHelper.getInstance()
                 .getHomeArticleListData(0)
-                .compose(RxUtils.<BaseResponse<HomeArticleListData>>schedulerTransformer())
-                .compose(RxUtils.<HomeArticleListData>responseTransformer())
-                .subscribe(new Consumer<HomeArticleListData>() {
+                .compose(RxUtils.<BaseResponse<HomeArticleList>>schedulerTransformer())
+                .compose(RxUtils.<HomeArticleList>responseTransformer())
+                .subscribe(new Consumer<HomeArticleList>() {
                     @Override
-                    public void accept(HomeArticleListData homeArticleListData) throws Exception {
+                    public void accept(HomeArticleList homeArticleList) throws Exception {
                         if (isViewAttached())
-                            getView().showNewListDataSucceed(homeArticleListData.getDatas());
+                            getView().showNewListDataSucceed(homeArticleList.getDatas());
                     }
                 }, new ErrorConsumer<Throwable>() {
                     @Override
@@ -54,11 +50,11 @@ public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.
     public void getBannerData() {
         addDisposable(HttpHelper.getInstance()
                 .getBannerListData()
-                .compose(RxUtils.<BaseResponse<List<BannerData>>>schedulerTransformer())
-                .compose(RxUtils.<List<BannerData>>responseTransformer())
-                .subscribe(new Consumer<List<BannerData>>() {
+                .compose(RxUtils.<BaseResponse<List<Banner>>>schedulerTransformer())
+                .compose(RxUtils.<List<Banner>>responseTransformer())
+                .subscribe(new Consumer<List<Banner>>() {
                     @Override
-                    public void accept(List<BannerData> bannerData) throws Exception {
+                    public void accept(List<Banner> bannerData) throws Exception {
                         if (isViewAttached())
                             getView().showNewBannerDataSucceed(bannerData);
                     }
@@ -75,13 +71,13 @@ public class HomeFragmentPresenter extends RxBasePresenter<HomeFragmentContract.
     public void addListData(int page) {
         addDisposable(HttpHelper.getInstance()
                 .getHomeArticleListData(page)
-                .compose(RxUtils.<BaseResponse<HomeArticleListData>>schedulerTransformer())
-                .compose(RxUtils.<HomeArticleListData>responseTransformer())
-                .subscribe(new Consumer<HomeArticleListData>() {
+                .compose(RxUtils.<BaseResponse<HomeArticleList>>schedulerTransformer())
+                .compose(RxUtils.<HomeArticleList>responseTransformer())
+                .subscribe(new Consumer<HomeArticleList>() {
                     @Override
-                    public void accept(HomeArticleListData homeArticleListData) throws Exception {
+                    public void accept(HomeArticleList homeArticleList) throws Exception {
                         if (isViewAttached())
-                            getView().showAddListDataSucceed(homeArticleListData.getDatas());
+                            getView().showAddListDataSucceed(homeArticleList.getDatas());
                     }
                 }, new ErrorConsumer<Throwable>() {
                     @Override

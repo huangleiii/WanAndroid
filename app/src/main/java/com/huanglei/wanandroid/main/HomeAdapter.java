@@ -1,4 +1,4 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.model.bean.Article;
 
 import java.util.List;
@@ -20,7 +21,7 @@ private Context mContext;
     public HomeAdapter(Context context,@Nullable List<Article> data) {
         super(data);
         mContext=context;
-        addItemType(Article.TYPE_ARTICLE,R.layout.item_fragment_home);
+        addItemType(Article.TYPE_ARTICLE, R.layout.item_fragment_home);
         addItemType(Article.TYPE_PROJECT,R.layout.item_fragment_project);
     }
 

@@ -1,6 +1,6 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
-import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
+import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.ArticleDetailActivityContract;
 import com.huanglei.wanandroid.event.CancelCollectEvent;
 import com.huanglei.wanandroid.event.CollectEvent;
@@ -15,7 +15,7 @@ import io.reactivex.functions.Consumer;
  * Created by 黄垒 on 2018/12/6.
  */
 
-public class ArticleDetailActivityPresenter extends RxBasePresenter<ArticleDetailActivityContract.View> implements ArticleDetailActivityContract.Presenter{
+public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDetailActivityContract.View> implements ArticleDetailActivityContract.Presenter{
 
     @Override
     public void collect(final int position, int id) {

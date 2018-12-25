@@ -6,7 +6,7 @@ import java.util.List;
  * Created by HuangLei on 2018/11/14.
  */
 
-public class HomeArticleListData {
+public class HomeArticleList {
     private int curPage;
     private List<Article> datas;
     private  int offset;

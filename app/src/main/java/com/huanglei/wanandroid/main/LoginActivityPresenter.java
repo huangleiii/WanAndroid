@@ -1,9 +1,8 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
-import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
+import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.LoginActivityContract;
 import com.huanglei.wanandroid.event.LoginEvent;
-import com.huanglei.wanandroid.event.LogoutEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.bean.Account;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
@@ -18,7 +17,7 @@ import io.reactivex.functions.Consumer;
  * Created by HuangLei on 2018/11/26.
  */
 
-public class LoginActivityPresenter extends RxBasePresenter<LoginActivityContract.View> implements LoginActivityContract.Presenter {
+public class LoginActivityPresenter extends RxMVPBasePresenter<LoginActivityContract.View> implements LoginActivityContract.Presenter {
 
     @Override
     public void login(String username, String password) {

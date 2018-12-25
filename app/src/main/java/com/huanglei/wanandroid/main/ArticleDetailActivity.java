@@ -1,6 +1,8 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -10,22 +12,18 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huanglei.wanandroid.base.view.activity.CommonBaseActivity;
+import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.ArticleDetailActivityContract;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.just.agentweb.AgentWeb;
-import com.just.agentweb.IAgentWebSettings;
-
-import org.w3c.dom.Text;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActivityContract.Presenter> implements ArticleDetailActivityContract.View {
+public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivityContract.Presenter> implements ArticleDetailActivityContract.View {
     @BindView(R.id.toolbar_activity_article_detail)
     Toolbar toolbarActivityArticleDetail;
     @BindView(R.id.linear_content_activity_article_detail)
@@ -39,10 +37,14 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
     private String articleLink;
     public static final String ARTICLE_ID = "article id";
     private int articleId;
-    public static final String ARTICLE_IS_COLLECTED = "article is collected";
+    public static final String ARTICLE_IS_COLLECTED = "article is collected or not";
     private boolean articleIsCollected;
-    public static final String ARTICLE_POSITION="this article's position";
+    public static final String ARTICLE_POSITION="article position";
     private int articlePosition;
+    public static final String ARTICLE_IS_HOME="article is on the front page or not";
+    private boolean articleIsHome;
+    public static final String ARTICLE_CAN_COLLECT="article can collect or not";
+    private boolean articleCanCollect;
     private WebView webView;
 
     @Override
@@ -106,7 +108,7 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
                 .go(articleLink);
         webView=mAgentWeb.getWebCreator().getWebView();
         WebSettings mSettings = webView.getSettings();
-        mSettings.setBlockNetworkImage(true);
+        mSettings.setBlockNetworkImage(false);//设置为true就不加载图片
         mSettings.setAppCacheEnabled(true);
         mSettings.setDomStorageEnabled(true);
         mSettings.setDatabaseEnabled(true);
@@ -136,7 +138,9 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
             articleLink = bundle.getString(ARTICLE_LINK);
             articleId = bundle.getInt(ARTICLE_ID);
             articleIsCollected = bundle.getBoolean(ARTICLE_IS_COLLECTED);
+            articleIsHome=bundle.getBoolean(ARTICLE_IS_HOME);
             articlePosition=bundle.getInt(ARTICLE_POSITION);
+            articleCanCollect=bundle.getBoolean(ARTICLE_CAN_COLLECT);
         }
     }
 
@@ -185,12 +189,16 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_menu,menu);
         MenuItem collectMenuItem=menu.findItem(R.id.favorite_detail_menu);
-        if(articleIsCollected){
-            collectMenuItem.setIcon(R.drawable.ic_favorite_red_24dp);
-            collectMenuItem.setTitle("取消收藏");
+        if(!articleCanCollect){
+            collectMenuItem.setVisible(false);
         }else {
-            collectMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
-            collectMenuItem.setTitle("收藏");
+            if(articleIsCollected){
+                collectMenuItem.setIcon(R.drawable.ic_favorite_red_24dp);
+                collectMenuItem.setTitle("取消收藏");
+            }else {
+                collectMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
+                collectMenuItem.setTitle("收藏");
+            }
         }
         return true;
     }
@@ -212,9 +220,15 @@ public class ArticleDetailActivity extends CommonBaseActivity<ArticleDetailActiv
                 supportInvalidateOptionsMenu();
                 break;
             case R.id.share_detail_menu:
+                Intent intent=new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT,getString(R.string.app_name)+"分享【"+articleTitle+"】:\n"+articleLink);
+                startActivity(Intent.createChooser(intent,"分享文章"));
                 break;
             case R.id.open_detail_menu:
-                CommonUtils.showToastMessage(this,webView.getUrl());
+                Intent intent1=new Intent(Intent.ACTION_VIEW);
+                intent1.setData(Uri.parse(articleLink));
+                startActivity(intent1);
                 break;
             default:
                 break;

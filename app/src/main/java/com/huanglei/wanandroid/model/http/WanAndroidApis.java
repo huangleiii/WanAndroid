@@ -2,9 +2,10 @@ package com.huanglei.wanandroid.model.http;
 
 
 import com.huanglei.wanandroid.model.bean.Account;
-import com.huanglei.wanandroid.model.bean.BannerData;
+import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
-import com.huanglei.wanandroid.model.bean.HomeArticleListData;
+import com.huanglei.wanandroid.model.bean.HomeArticleList;
+import com.huanglei.wanandroid.model.bean.HotWebsite;
 
 import java.util.List;
 
@@ -23,10 +24,10 @@ public interface WanAndroidApis {
     String HOST = "http://www.wanandroid.com/";
 
     @GET("article/list/{num}/json")
-    Observable<BaseResponse<HomeArticleListData>> getHomeArticleListData(@Path("num") int num);
+    Observable<BaseResponse<HomeArticleList>> getHomeArticleListData(@Path("num") int num);
 
     @GET("banner/json")
-    Observable<BaseResponse<List<BannerData>>> getBannerListData();
+    Observable<BaseResponse<List<Banner>>> getBannerListData();
 
     @POST("user/login")
     @FormUrlEncoded
@@ -44,5 +45,8 @@ public interface WanAndroidApis {
 
     @POST("lg/uncollect_originId/{id}/json")
     Observable<BaseResponse<Object>> cancelCollect(@Path("id") int id);
+
+    @GET("friend/json")
+    Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList();
 
 }

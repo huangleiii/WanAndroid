@@ -1,6 +1,5 @@
 package com.huanglei.wanandroid.model.http;
 
-import android.graphics.Interpolator;
 import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -9,11 +8,11 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.app.WanAndroidApplication;
 import com.huanglei.wanandroid.model.bean.Account;
-import com.huanglei.wanandroid.model.bean.BannerData;
+import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
-import com.huanglei.wanandroid.model.bean.HomeArticleListData;
+import com.huanglei.wanandroid.model.bean.HomeArticleList;
+import com.huanglei.wanandroid.model.bean.HotWebsite;
 import com.huanglei.wanandroid.utils.CommonUtils;
-import com.huanglei.wanandroid.utils.RxUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,11 +132,11 @@ public class HttpHelper {
         return mWanAndroidApis;
     }
 
-    public Observable<BaseResponse<HomeArticleListData>> getHomeArticleListData(int num) {
+    public Observable<BaseResponse<HomeArticleList>> getHomeArticleListData(int num) {
         return mWanAndroidApis.getHomeArticleListData(num);
     }
 
-    public Observable<BaseResponse<List<BannerData>>> getBannerListData() {
+    public Observable<BaseResponse<List<Banner>>> getBannerListData() {
         return mWanAndroidApis.getBannerListData();
     }
 
@@ -159,6 +158,9 @@ public class HttpHelper {
 
     public Observable<BaseResponse<Object>> cancelCollect(int id) {
         return mWanAndroidApis.cancelCollect(id);
+    }
+    public Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList(){
+        return mWanAndroidApis.getHotWebsiteList();
     }
 
 }

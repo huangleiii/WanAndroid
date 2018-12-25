@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable;
  * Created by HuangLei on 2018/11/27.
  */
 
-public abstract class RxBasePresenter<T extends IBaseView> extends BasePresenter<T> {
+public abstract class RxMVPBasePresenter<T extends IBaseView> extends MVPBasePresenter<T> {
     private CompositeDisposable compositeDisposable;
 
     @Override

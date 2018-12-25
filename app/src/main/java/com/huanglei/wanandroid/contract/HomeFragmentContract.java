@@ -3,7 +3,7 @@ package com.huanglei.wanandroid.contract;
 import com.huanglei.wanandroid.base.presenter.IBasePresenter;
 import com.huanglei.wanandroid.base.view.IBaseView;
 import com.huanglei.wanandroid.model.bean.Article;
-import com.huanglei.wanandroid.model.bean.BannerData;
+import com.huanglei.wanandroid.model.bean.Banner;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface HomeFragmentContract {
         void showNewListDataSucceed(List<Article> articles);
         void showNewListDataFailed(String errorMsg);
 
-        void showNewBannerDataSucceed(List<BannerData> bannerData);
+        void showNewBannerDataSucceed(List<Banner> bannerData);
         void showNewBannerDataFailed(String errorMsg);
 
         void showAddListDataSucceed(List<Article> articles);

@@ -1,4 +1,4 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
 import android.content.Context;
 import android.support.v7.widget.Toolbar;
@@ -10,7 +10,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huanglei.wanandroid.base.view.activity.CommonBaseActivity;
+import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.LoginActivityContract;
 import com.huanglei.wanandroid.model.bean.Account;
 import com.huanglei.wanandroid.utils.CommonUtils;
@@ -18,7 +19,7 @@ import com.huanglei.wanandroid.widget.MyProgressDialog;
 
 import butterknife.BindView;
 
-public class LoginActivity extends CommonBaseActivity<LoginActivityContract.Presenter> implements LoginActivityContract.View {
+public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Presenter> implements LoginActivityContract.View {
 
     @BindView(R.id.lin_account_activity_login)
     LinearLayout linAccountActivityLogin;

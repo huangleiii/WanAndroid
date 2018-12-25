@@ -1,4 +1,4 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
 
 import android.app.AlertDialog;
@@ -14,13 +14,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.huanglei.wanandroid.base.view.activity.CommonBaseActivity;
+import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.huanglei.wanandroid.widget.MyProgressDialog;
@@ -28,7 +30,7 @@ import com.huanglei.wanandroid.widget.MyProgressDialog;
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends CommonBaseActivity<MainActivityContract.Presenter> implements MainActivityContract.View {
+public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter> implements MainActivityContract.View {
     public static final String TAG_PAGE_HOME = "main";
     public static final String TAG_PAGE_KNOWLEDGE = "knowledge";
     public static final String TAG_PAGE_WEIXIN = "weixin";
@@ -168,10 +170,21 @@ public class MainActivity extends CommonBaseActivity<MainActivityContract.Presen
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayoutActivityMain.openDrawer(navigationActivityMain);
+                break;
+            case R.id.hot_website_main_menu:
+                startActivity(new Intent(this,HotWebsiteActivity.class));
+                break;
+            case R.id.search_main_menu:
                 break;
             default:
                 break;

@@ -16,7 +16,7 @@ import com.huanglei.wanandroid.base.presenter.IBasePresenter;
  * Created by HuangLei on 2018/11/20.
  */
 
-public abstract class StateBaseFragment<T extends IBasePresenter> extends CommonBaseFragment<T> {
+public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVPBaseFragment<T> {
     private static final int STATE_NORMAL = 0;
     private static final int STATE_LOADING = 1;
     private static final int STATE_ERROR = 2;
@@ -62,6 +62,12 @@ public abstract class StateBaseFragment<T extends IBasePresenter> extends Common
         if(currentState==STATE_ERROR){
             prepareRequestData(true);
         }
+    }
+
+    protected boolean isNormal(){
+        if(currentState==STATE_NORMAL)
+            return true;
+        return false;
     }
 
     @Override

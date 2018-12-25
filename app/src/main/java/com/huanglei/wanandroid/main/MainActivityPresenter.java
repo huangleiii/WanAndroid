@@ -1,6 +1,6 @@
-package com.huanglei.wanandroid;
+package com.huanglei.wanandroid.main;
 
-import com.huanglei.wanandroid.base.presenter.RxBasePresenter;
+import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.event.LoginEvent;
 import com.huanglei.wanandroid.event.LoginExpiredEvent;
@@ -18,7 +18,7 @@ import io.reactivex.functions.Consumer;
  * Created by HuangLei on 2018/11/23.
  */
 
-public class MainActivityPresenter extends RxBasePresenter<MainActivityContract.View> implements MainActivityContract.Presenter {
+public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContract.View> implements MainActivityContract.Presenter {
     @Override
     public boolean getLoginStatus() {
         return SharedPreferencesHelper.getInstance().getLoginStatus();
