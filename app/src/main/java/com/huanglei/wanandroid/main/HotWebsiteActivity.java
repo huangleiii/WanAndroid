@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.HotWebsiteActivityContract;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
@@ -20,7 +21,6 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContract.Presenter> implements HotWebsiteActivityContract.View {
     //    @BindView(R.id.toolbar_activity_hot_website)
@@ -84,14 +84,8 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
         flowlayoutActivityHotWebsite.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                Intent intent = new Intent(HotWebsiteActivity.this, ArticleDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(ArticleDetailActivity.ARTICLE_ID, mHotWebsites.get(position).getId());
-                bundle.putString(ArticleDetailActivity.ARTICLE_TITLE, mHotWebsites.get(position).getName());
-                bundle.putString(ArticleDetailActivity.ARTICLE_LINK, mHotWebsites.get(position).getLink());
-                bundle.putBoolean(ArticleDetailActivity.ARTICLE_CAN_COLLECT, false);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                ArticleDetailActivity.startArticleDetailActivity(HotWebsiteActivity.this,
+                        mHotWebsites.get(position).getName(),mHotWebsites.get(position).getLink());
                 return true;
             }
         });
@@ -116,7 +110,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
 
     @Override
     protected HotWebsiteActivityContract.Presenter createPresenter() {
-        return new HotWebsitePresenter();
+        return new HotWebsiteActivityPresenter();
     }
 
 }

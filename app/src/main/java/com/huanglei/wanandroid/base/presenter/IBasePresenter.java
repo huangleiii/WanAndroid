@@ -9,5 +9,4 @@ import com.huanglei.wanandroid.base.view.IBaseView;
 public interface IBasePresenter<T extends IBaseView> {
     void attachView(T view);
     void detachView();
-    boolean isViewAttached();
 }

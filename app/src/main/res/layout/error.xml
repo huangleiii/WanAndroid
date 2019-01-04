@@ -2,26 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/tv_retry_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="重新加载"
-        android:textColor="@color/blue"
-        android:textSize="16sp"
-        android:background="@drawable/shape_tag_background_blue"
-        android:padding="5dp"
-        android:clickable="true"/>
+    android:layout_height="match_parent"
+    android:id="@+id/relativelayout_retry_error">
     <TextView
         android:id="@+id/tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/tv_retry_error"
-        android:text="加载失败"
-        android:textColor="@color/red"
-        android:textSize="20sp"/>
+        android:layout_centerInParent="true"
+        android:text="加载失败，请点击屏幕重新加载"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        android:paddingBottom="48dp"/>
 </RelativeLayout>

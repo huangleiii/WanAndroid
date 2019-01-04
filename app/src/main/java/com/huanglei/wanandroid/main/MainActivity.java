@@ -22,7 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
+import com.huanglei.wanandroid.base.view.fragment.MVPBaseFragment;
+import com.huanglei.wanandroid.base.view.fragment.StateMVPBaseFragment;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.huanglei.wanandroid.widget.MyProgressDialog;
@@ -88,7 +91,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                 switch (menuItem.getItemId()) {
                     case R.id.home_bottom_menu:
                         if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
-                            Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                            StateMVPBaseFragment currentFragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
                             mFragmentTransaction.hide(currentFragment);
                         }
                         if (mFragmentManager.findFragmentByTag(TAG_PAGE_HOME) == null) {
@@ -228,7 +231,31 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     }
 
     @Override
-    public void subscribeUnLoginEvent() {
+    public void subscribeCancelCollectEvent(String activityName) {
+        if(activityName.equals(Constants.MAIN_ACTIVITY)){
+            if(!TextUtils.isEmpty(mCurrentFragmentTag)){
+                StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                if(fragment!=null){
+                    fragment.updateView();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void subscribeCollectEvent(String activityName) {
+        if(activityName.equals(Constants.MAIN_ACTIVITY)){
+            if(!TextUtils.isEmpty(mCurrentFragmentTag)){
+                StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                if(fragment!=null){
+                    fragment.updateView();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void subscribeLoginExpiredEvent() {
         showUnLogin();
         startActivity(new Intent(this,LoginActivity.class));
     }
@@ -236,9 +263,20 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     private void showLogin(String username){
         mHeaderTextView.setText(username);
         navigationActivityMain.getMenu().getItem(LOG_OUT).setVisible(true);
+        refreshCurrentFragment();
     }
     private void showUnLogin(){
         mHeaderTextView.setText("登录");
         navigationActivityMain.getMenu().getItem(LOG_OUT).setVisible(false);
+        refreshCurrentFragment();
     }
+    private void refreshCurrentFragment(){
+        if(!TextUtils.isEmpty(mCurrentFragmentTag)){
+            StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+            if(fragment!=null&&fragment.isShown()){
+                fragment.prepareRequestData(true);
+            }
+        }
+    }
+
 }

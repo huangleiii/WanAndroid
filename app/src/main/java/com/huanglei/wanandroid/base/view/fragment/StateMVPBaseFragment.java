@@ -24,7 +24,7 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
     private View mNormalView;
     private View mLoadingView;
     private View mErrorView;
-    private TextView mRetry;
+
 
     @Nullable
     @Override
@@ -43,8 +43,7 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
         ((ViewGroup)view).addView(mLoadingView);
         mErrorView=getLayoutInflater().inflate(R.layout.error,  (ViewGroup)view,false);
         ((ViewGroup)view).addView(mErrorView);
-        mRetry=mErrorView.findViewById(R.id.tv_retry_error);
-        mRetry.setOnClickListener(new View.OnClickListener() {
+        mErrorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 prepareRequestData(true);
@@ -63,16 +62,10 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
             prepareRequestData(true);
         }
     }
-
     protected boolean isNormal(){
         if(currentState==STATE_NORMAL)
             return true;
         return false;
-    }
-
-    @Override
-    public Context getViewContext() {
-        return getContext();
     }
 
     protected void showNormal() {
@@ -98,7 +91,6 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
         hideCurrentView();
         currentState=STATE_LOADING;
         mLoadingView.setVisibility(View.VISIBLE);
-
     }
 
     private void hideCurrentView() {

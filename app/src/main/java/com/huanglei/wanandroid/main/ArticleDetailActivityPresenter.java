@@ -4,6 +4,7 @@ import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.ArticleDetailActivityContract;
 import com.huanglei.wanandroid.event.CancelCollectEvent;
 import com.huanglei.wanandroid.event.CollectEvent;
+import com.huanglei.wanandroid.event.LoginExpiredEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.http.HttpHelper;
 import com.huanglei.wanandroid.utils.ErrorConsumer;
@@ -15,36 +16,36 @@ import io.reactivex.functions.Consumer;
  * Created by 黄垒 on 2018/12/6.
  */
 
-public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDetailActivityContract.View> implements ArticleDetailActivityContract.Presenter{
+public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDetailActivityContract.View> implements ArticleDetailActivityContract.Presenter {
 
     @Override
-    public void collect(final int position, int id) {
+    public void collect(final String activityName, int id) {
         addDisposable(HttpHelper.getInstance()
                 .collect(id)
-        .compose(RxUtils.noDataResponseTransformer())
-        .compose(RxUtils.schedulerTransformer())
-        .subscribe(new Consumer<Object>() {
-            @Override
-            public void accept(Object o) throws Exception {
-                if(isViewAttached()){
-                    getView().showCollectSucceed();
-                    CollectEvent  collectEvent=new CollectEvent();
-                    collectEvent.setPosition(position);
-                    RxBus.getInstance().post(collectEvent);
-                }
-            }
-        }, new ErrorConsumer<Throwable>() {
-            @Override
-            protected void onError(int errorCode, String errorMessage) {
-                if(isViewAttached()){
-                    getView().showCollectFailed(errorMessage);
-                }
-            }
-        }));
+                .compose(RxUtils.noDataResponseTransformer())
+                .compose(RxUtils.schedulerTransformer())
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        if (isViewAttached()) {
+                            getView().showCollectSucceed();
+                            CollectEvent collectEvent = new CollectEvent();
+                            collectEvent.setActivityName(activityName);
+                            RxBus.getInstance().post(collectEvent);
+                        }
+                    }
+                }, new ErrorConsumer<Throwable>() {
+                    @Override
+                    protected void onError(int errorCode, String errorMessage) {
+                        if (isViewAttached()) {
+                            getView().showCollectFailed(errorMessage);
+                        }
+                    }
+                }));
     }
 
     @Override
-    public void cancelCollect(final int position, int id) {
+    public void cancelCollect(final String activityName, int id) {
         addDisposable(HttpHelper.getInstance()
                 .cancelCollect(id)
                 .compose(RxUtils.noDataResponseTransformer())
@@ -52,26 +53,33 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        if(isViewAttached()){
+                        if (isViewAttached()) {
                             getView().showCancelCollectSucceed();
-                            CancelCollectEvent cancelCollectEvent=new CancelCollectEvent();
-                            cancelCollectEvent.setPosition(position);
+                            CancelCollectEvent cancelCollectEvent = new CancelCollectEvent();
+                            cancelCollectEvent.setActivityName(activityName);
                             RxBus.getInstance().post(cancelCollectEvent);
                         }
                     }
                 }, new ErrorConsumer<Throwable>() {
                     @Override
                     protected void onError(int errorCode, String errorMessage) {
-                        if(isViewAttached()){
+                        if (isViewAttached()) {
                             getView().showCancelCollectFailed(errorMessage);
                         }
                     }
                 }));
-
     }
 
     @Override
     protected void registerEvent() {
+        addDisposable(RxBus.getInstance().toObservable(LoginExpiredEvent.class)
+                .subscribe(new Consumer<LoginExpiredEvent>() {
+                    @Override
+                    public void accept(LoginExpiredEvent loginExpiredEvent) throws Exception {
+                        if (isViewAttached())
+                            getView().subscribeLoginExpiredEvent();
+                    }
+                }));
 
     }
 }

@@ -2,6 +2,8 @@ package com.huanglei.wanandroid.main;
 
 import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.MainActivityContract;
+import com.huanglei.wanandroid.event.CancelCollectEvent;
+import com.huanglei.wanandroid.event.CollectEvent;
 import com.huanglei.wanandroid.event.LoginEvent;
 import com.huanglei.wanandroid.event.LoginExpiredEvent;
 import com.huanglei.wanandroid.event.LogoutEvent;
@@ -68,7 +70,28 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                     @Override
                     public void accept(LoginExpiredEvent loginExpiredEvent) throws Exception {
                         if(isViewAttached())
-                            getView().subscribeUnLoginEvent();
+                            getView().subscribeLoginExpiredEvent();
+                    }
+                }));
+
+        addDisposable(RxBus.getInstance()
+                .toObservable(CancelCollectEvent.class)
+                .subscribe(new Consumer<CancelCollectEvent>() {
+                    @Override
+                    public void accept(CancelCollectEvent cancelCollectEvent) throws Exception {
+                        if (isViewAttached()) {
+                            getView().subscribeCancelCollectEvent(cancelCollectEvent.getActivityName());
+                        }
+                    }
+                }));
+        addDisposable(RxBus.getInstance()
+                .toObservable(CollectEvent.class)
+                .subscribe(new Consumer<CollectEvent>() {
+                    @Override
+                    public void accept(CollectEvent collectEvent) throws Exception {
+                        if (isViewAttached()) {
+                            getView().subscribeCollectEvent(collectEvent.getActivityName());
+                        }
                     }
                 }));
     }

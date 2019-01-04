@@ -5,13 +5,13 @@ package com.huanglei.wanandroid.event;
  */
 
 public class CancelCollectEvent {
-    private int position;
+    private String activityName;
 
-    public int getPosition() {
-        return position;
+    public String getActivityName() {
+        return activityName;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
     }
 }

@@ -8,9 +8,11 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.app.WanAndroidApplication;
 import com.huanglei.wanandroid.model.bean.Account;
+import com.huanglei.wanandroid.model.bean.Article;
 import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.HomeArticleList;
+import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
 import com.huanglei.wanandroid.utils.CommonUtils;
 
@@ -161,6 +163,12 @@ public class HttpHelper {
     }
     public Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList(){
         return mWanAndroidApis.getHotWebsiteList();
+    }
+    public Observable<BaseResponse<HomeArticleList>> getSearchArticleList(String key,int page){
+        return mWanAndroidApis.getSearchArticleList(key,page);
+    }
+    public Observable<BaseResponse<List<HotKey>>> getSearchHotKeys(){
+        return mWanAndroidApis.getSearchHotKeys();
     }
 
 }

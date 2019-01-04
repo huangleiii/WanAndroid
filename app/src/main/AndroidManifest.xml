@@ -15,10 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity"
+        <activity
+            android:name=".main.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,10 +31,12 @@
             android:name=".main.ArticleDetailActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTop"/>
-        <activity android:name=".main.HotWebsiteActivity"
-            android:theme="@style/RoundCornerDialogActivityTheme"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".main.HotWebsiteActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/RoundCornerDialogActivityTheme" />
+        <activity android:name=".main.SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -9,8 +9,8 @@ import com.huanglei.wanandroid.base.view.IBaseView;
 
 public interface ArticleDetailActivityContract {
     interface Presenter extends IBasePresenter<View>{
-        void collect(int position,int id);
-        void cancelCollect(int position,int id);
+        void collect(String activityName,int id);
+        void cancelCollect(String activityName,int id);
     }
     interface View extends IBaseView{
         void showCollectSucceed();
@@ -18,5 +18,7 @@ public interface ArticleDetailActivityContract {
 
         void showCancelCollectSucceed();
         void showCancelCollectFailed(String errorMsg);
+
+        void subscribeLoginExpiredEvent();
     }
 }

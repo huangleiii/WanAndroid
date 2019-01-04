@@ -26,9 +26,8 @@ public abstract class MVPBasePresenter<T extends IBaseView> implements IBasePres
             mWeakView = null;
         }
     }
-
-    @Override
-    public boolean isViewAttached() {
+//protected表示只希望本类及子类内部使用，public时希望在其他类中也可以使用。
+    protected boolean isViewAttached() {
         return mWeakView != null && mWeakView.get() != null;
     }
 

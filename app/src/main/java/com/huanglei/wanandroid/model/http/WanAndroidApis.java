@@ -5,6 +5,7 @@ import com.huanglei.wanandroid.model.bean.Account;
 import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.HomeArticleList;
+import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
 
 import java.util.List;
@@ -48,5 +49,11 @@ public interface WanAndroidApis {
 
     @GET("friend/json")
     Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList();
+
+    @POST("article/query/{num}/json")
+    Observable<BaseResponse<HomeArticleList>> getSearchArticleList(@Field("k") String key,@Path("num") int num);
+
+    @GET("hotkey/json")
+    Observable<BaseResponse<List<HotKey>>> getSearchHotKeys();
 
 }

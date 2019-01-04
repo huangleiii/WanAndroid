@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.huanglei.wanandroid.R;
+import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.fragment.StateMVPBaseFragment;
 import com.huanglei.wanandroid.contract.HomeFragmentContract;
 import com.huanglei.wanandroid.model.bean.Article;
@@ -41,12 +42,14 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     @BindView(R.id.lin_root_fragment_home)
     LinearLayout linRootFragmentHome;
     private com.youth.banner.Banner mBanner;
+    private List<Integer> ids;
     private List<String> titles;
     private List<String> imgs;
     private List<String> urls;
     private HomeAdapter mHomeAdapter;
     private int page = 0;
-    private boolean isFirstRefreshSucceed = true;
+    private boolean isFirstRefresh = true;
+    private int mClickPosition;
 
     public static HomeFragment newInstance() {
         HomeFragment homeFragment = new HomeFragment();
@@ -84,9 +87,18 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
             }
         }, recyclerViewFragmentHome);
         mBanner = (com.youth.banner.Banner) getLayoutInflater().inflate(R.layout.banner_home, linRootFragmentHome, false);
+        ids = new ArrayList<>();
         titles = new ArrayList<>();
         imgs = new ArrayList<>();
         urls = new ArrayList<>();
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                mClickPosition = -1;
+                ArticleDetailActivity.startArticleDetailActivity(getContext(),  titles.get(position),
+                        urls.get(position));
+            }
+        });
         mBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
                 .setBannerTitles(titles)
                 .setImages(imgs)
@@ -99,19 +111,6 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
                     }
                 }).start();
         mHomeAdapter.addHeaderView(mBanner);
-        mBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(ArticleDetailActivity.ARTICLE_TITLE, titles.get(position));
-                bundle.putString(ArticleDetailActivity.ARTICLE_LINK, urls.get(position));
-                bundle.putBoolean(ArticleDetailActivity.ARTICLE_CAN_COLLECT, false);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
-            }
-        });
         mHomeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -136,17 +135,9 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
         mHomeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(ArticleDetailActivity.ARTICLE_ID, ((Article) adapter.getItem(position)).getId());
-                bundle.putString(ArticleDetailActivity.ARTICLE_TITLE, ((Article) adapter.getItem(position)).getTitle());
-                bundle.putString(ArticleDetailActivity.ARTICLE_LINK, ((Article) adapter.getItem(position)).getLink());
-                bundle.putBoolean(ArticleDetailActivity.ARTICLE_IS_COLLECTED, ((Article) adapter.getItem(position)).isCollect());
-                bundle.putBoolean(ArticleDetailActivity.ARTICLE_CAN_COLLECT, true);
-                bundle.putBoolean(ArticleDetailActivity.ARTICLE_IS_HOME, true);
-                bundle.putInt(ArticleDetailActivity.ARTICLE_POSITION, position);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                mClickPosition = position;
+                ArticleDetailActivity.startArticleDetailActivity(getContext(), Constants.MAIN_ACTIVITY, ((Article) adapter.getItem(position)).getId(),
+                        ((Article) adapter.getItem(position)).getTitle(), ((Article) adapter.getItem(position)).getLink(),((Article)adapter.getItem(position)).isCollect());
             }
         });
     }
@@ -158,9 +149,15 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
 
     @Override
     protected void requestData() {
-        showLoading();
-        getPresenter().getListData();
-        getPresenter().getBannerData();
+        if (!isFirstRefresh) {
+            recyclerViewFragmentHome.scrollToPosition(0);
+            mHomeAdapter.setEnableLoadMore(false);
+            normal.autoRefresh();
+        } else {
+            showLoading();
+            getPresenter().getListData();
+            getPresenter().getBannerData();
+        }
     }
 
 
@@ -168,18 +165,18 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     public void showNewListDataSucceed(List<Article> articles) {
         mHomeAdapter.replaceData(articles);
         page = 0;
-        if (!isFirstRefreshSucceed) {
+        if (!isFirstRefresh) {
             normal.finishRefresh(true);
             mHomeAdapter.setEnableLoadMore(true);
         } else {
             showNormal();
-            isFirstRefreshSucceed = false;
+            isFirstRefresh = false;
         }
     }
 
     @Override
     public void showNewListDataFailed(String errorMsg) {
-        if (!isFirstRefreshSucceed) {
+        if (!isFirstRefresh) {
             normal.finishRefresh(false);
             mHomeAdapter.setEnableLoadMore(true);
         } else {
@@ -190,10 +187,15 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
 
     @Override
     public void showNewBannerDataSucceed(List<Banner> banners) {
+        titles.clear();
+        urls.clear();
+        imgs.clear();
+        ids.clear();
         for (Banner banner : banners) {
             titles.add(banner.getTitle());
             urls.add(banner.getUrl());
             imgs.add(banner.getImagePath());
+            ids.add(banner.getId());
         }
         mBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
                 .setBannerTitles(titles)
@@ -217,6 +219,14 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
         super.onStart();
         if (isNormal())
             mBanner.startAutoPlay();
+    }
+
+    @Override
+    public void updateView() {
+        if (!(mClickPosition < 0)) {
+            mHomeAdapter.getItem(mClickPosition).setCollect(!mHomeAdapter.getItem(mClickPosition).isCollect());
+            mHomeAdapter.notifyItemChanged(mClickPosition + 1);//这里要加1是因为要把recyclerView的headerView算上。
+        }
     }
 
     @Override
@@ -272,30 +282,32 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
 
     }
 
-    @Override
-    public void showCancelCollectEvent(int position) {
-        mHomeAdapter.getItem(position).setCollect(false);
-//        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
-        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
-    }
+//    @Override
+//    public void showCancelCollectEvent(int position) {
+//        mHomeAdapter.getItem(position).setCollect(false);
+////        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
+//        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
+//    }
+//
+//    @Override
+//    public void showCollectEvent(int position) {
+//        mHomeAdapter.getItem(position).setCollect(true);
+////        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
+//        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
+//    }
+//
+//    @Override
+//    public void showLoginEvent() {
+//        prepareRequestData(true);
+//    }
+//
+//    @Override
+//    public void showLogoutEvent() {
+//        prepareRequestData(true);
+//    }
 
     @Override
-    public void showCollectEvent(int position) {
-        mHomeAdapter.getItem(position).setCollect(true);
-//        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
-        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
+    public Context getViewContext() {
+        return getContext();
     }
-
-    @Override
-    public void showLoginEvent() {
-        mHomeAdapter.setEnableLoadMore(false);
-        normal.autoRefresh();
-    }
-
-    @Override
-    public void showLogoutEvent() {
-        mHomeAdapter.setEnableLoadMore(false);
-        normal.autoRefresh();
-    }
-
 }

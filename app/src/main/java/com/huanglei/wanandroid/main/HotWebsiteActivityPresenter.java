@@ -16,7 +16,7 @@ import io.reactivex.functions.Consumer;
  * Created by 黄垒 on 2018/12/26.
  */
 
-public class HotWebsitePresenter extends RxMVPBasePresenter<HotWebsiteActivityContract.View> implements HotWebsiteActivityContract.Presenter{
+public class HotWebsiteActivityPresenter extends RxMVPBasePresenter<HotWebsiteActivityContract.View> implements HotWebsiteActivityContract.Presenter{
 
     @Override
     public void getHotWebsiteList() {

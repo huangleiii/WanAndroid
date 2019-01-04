@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.ArticleDetailActivityContract;
+import com.huanglei.wanandroid.model.bean.Article;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.just.agentweb.AgentWeb;
 
@@ -31,21 +32,42 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
     @BindView(R.id.tv_title_activity_article_detail)
     TextView tvTitleActivityArticleDetail;
     private AgentWeb mAgentWeb;
-    public static final String ARTICLE_TITLE = "article title";
+    private static final String ARTICLE_TITLE = "article title";
     private String articleTitle;
-    public static final String ARTICLE_LINK = "article link";
+    private static final String ARTICLE_LINK = "article link";
     private String articleLink;
-    public static final String ARTICLE_ID = "article id";
+    private static final String ARTICLE_ID = "article id";
     private int articleId;
-    public static final String ARTICLE_IS_COLLECTED = "article is collected or not";
-    private boolean articleIsCollected;
-    public static final String ARTICLE_POSITION="article position";
-    private int articlePosition;
-    public static final String ARTICLE_IS_HOME="article is on the front page or not";
-    private boolean articleIsHome;
-    public static final String ARTICLE_CAN_COLLECT="article can collect or not";
+    private static final String ACTIVITY_NAME = "activity name";
+    private String activityName;
+    private static final String ARTICLE_CAN_COLLECT = "article can collect";
     private boolean articleCanCollect;
+    private static final String ARTICLE_IS_COLLECTED = "article is collected";
+    private boolean articleIsCollected;
     private WebView webView;
+
+    public static void startArticleDetailActivity(Context context, String activityName, int id, String title, String link, boolean isCollected) {
+        Intent intent = new Intent(context, ArticleDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTIVITY_NAME, activityName);
+        bundle.putBoolean(ARTICLE_CAN_COLLECT, true);
+        bundle.putInt(ARTICLE_ID, id);
+        bundle.putString(ARTICLE_TITLE, title);
+        bundle.putString(ARTICLE_LINK, link);
+        bundle.putBoolean(ARTICLE_IS_COLLECTED, isCollected);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
+
+    public static void startArticleDetailActivity(Context context, String title, String link) {
+        Intent intent = new Intent(context, ArticleDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ARTICLE_CAN_COLLECT, false);
+        bundle.putString(ARTICLE_TITLE, title);
+        bundle.putString(ARTICLE_LINK, link);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
+    }
 
     @Override
     public Context getViewContext() {
@@ -54,26 +76,33 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
 
     @Override
     public void showCollectSucceed() {
-        CommonUtils.showToastMessage(this,"收藏成功");
+        CommonUtils.showToastMessage(this, "收藏成功");
     }
 
     @Override
     public void showCollectFailed(String errorMsg) {
         articleIsCollected=false;
         supportInvalidateOptionsMenu();
-        CommonUtils.showToastMessage(this,errorMsg);
+        CommonUtils.showToastMessage(this, errorMsg);
     }
 
     @Override
     public void showCancelCollectSucceed() {
-        CommonUtils.showToastMessage(this,"取消收藏成功");
+        CommonUtils.showToastMessage(this, "取消收藏成功");
+
     }
 
     @Override
     public void showCancelCollectFailed(String errorMsg) {
         articleIsCollected=true;
         supportInvalidateOptionsMenu();
-        CommonUtils.showToastMessage(this,errorMsg);
+        CommonUtils.showToastMessage(this, errorMsg);
+
+    }
+
+    @Override
+    public void subscribeLoginExpiredEvent() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
@@ -95,18 +124,18 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(linearContentActivityArticleDetail, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()
-                .setWebChromeClient(new WebChromeClient(){
+                .setWebChromeClient(new WebChromeClient() {
                     @Override
                     public void onReceivedTitle(WebView view, String title) {
                         tvTitleActivityArticleDetail.setText(title);
                     }
                 })
-                .setMainFrameErrorView(R.layout.error,R.id.tv_retry_error)
+                .setMainFrameErrorView(R.layout.error, R.id.relativelayout_retry_error)
                 .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
                 .createAgentWeb()
                 .ready()
                 .go(articleLink);
-        webView=mAgentWeb.getWebCreator().getWebView();
+        webView = mAgentWeb.getWebCreator().getWebView();
         WebSettings mSettings = webView.getSettings();
         mSettings.setBlockNetworkImage(false);//设置为true就不加载图片
         mSettings.setAppCacheEnabled(true);
@@ -137,10 +166,9 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
             articleTitle = bundle.getString(ARTICLE_TITLE);
             articleLink = bundle.getString(ARTICLE_LINK);
             articleId = bundle.getInt(ARTICLE_ID);
+            activityName = bundle.getString(ACTIVITY_NAME);
+            articleCanCollect = bundle.getBoolean(ARTICLE_CAN_COLLECT);
             articleIsCollected = bundle.getBoolean(ARTICLE_IS_COLLECTED);
-            articleIsHome=bundle.getBoolean(ARTICLE_IS_HOME);
-            articlePosition=bundle.getInt(ARTICLE_POSITION);
-            articleCanCollect=bundle.getBoolean(ARTICLE_CAN_COLLECT);
         }
     }
 
@@ -187,46 +215,44 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.detail_menu,menu);
-        MenuItem collectMenuItem=menu.findItem(R.id.favorite_detail_menu);
-        if(!articleCanCollect){
-            collectMenuItem.setVisible(false);
-        }else {
-            if(articleIsCollected){
-                collectMenuItem.setIcon(R.drawable.ic_favorite_red_24dp);
-                collectMenuItem.setTitle("取消收藏");
-            }else {
-                collectMenuItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
-                collectMenuItem.setTitle("收藏");
-            }
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        MenuItem collectItem = menu.findItem(R.id.favorite_detail_menu);
+        collectItem.setVisible(articleCanCollect);
+        if (articleIsCollected) {
+            collectItem.setIcon(R.drawable.ic_favorite_red_24dp);
+            collectItem.setTitle("收藏");
+        } else {
+            collectItem.setIcon(R.drawable.ic_favorite_border_white_24dp);
+            collectItem.setTitle("取消收藏");
         }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
             case R.id.favorite_detail_menu:
-                if(articleIsCollected){
+                if (articleIsCollected) {
                     articleIsCollected=false;
-                    getPresenter().cancelCollect(articlePosition,articleId);
-                }else {
+                    supportInvalidateOptionsMenu();
+                    getPresenter().cancelCollect(activityName, articleId);
+                } else {
                     articleIsCollected=true;
-                    getPresenter().collect(articlePosition,articleId);
+                    supportInvalidateOptionsMenu();
+                    getPresenter().collect(activityName, articleId);
                 }
-                supportInvalidateOptionsMenu();
                 break;
             case R.id.share_detail_menu:
-                Intent intent=new Intent(Intent.ACTION_SEND);
+                Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT,getString(R.string.app_name)+"分享【"+articleTitle+"】:\n"+articleLink);
-                startActivity(Intent.createChooser(intent,"分享文章"));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.app_name) + "分享【" + articleTitle + "】:\n" + articleLink);
+                startActivity(Intent.createChooser(intent, "分享文章"));
                 break;
             case R.id.open_detail_menu:
-                Intent intent1=new Intent(Intent.ACTION_VIEW);
+                Intent intent1 = new Intent(Intent.ACTION_VIEW);
                 intent1.setData(Uri.parse(articleLink));
                 startActivity(intent1);
                 break;

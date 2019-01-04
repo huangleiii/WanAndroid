@@ -138,48 +138,8 @@ public class HomeFragmentPresenter extends RxMVPBasePresenter<HomeFragmentContra
                 }));
     }
 
-
     @Override
     protected void registerEvent() {
-        addDisposable(RxBus.getInstance()
-                .toObservable(CancelCollectEvent.class)
-                .subscribe(new Consumer<CancelCollectEvent>() {
-                    @Override
-                    public void accept(CancelCollectEvent cancelCollectEvent) throws Exception {
-                        if (isViewAttached()) {
-                            getView().showCancelCollectEvent(cancelCollectEvent.getPosition());
-                        }
-                    }
-                }));
-        addDisposable(RxBus.getInstance()
-                .toObservable(CollectEvent.class)
-                .subscribe(new Consumer<CollectEvent>() {
-                    @Override
-                    public void accept(CollectEvent collectEvent) throws Exception {
-                        if (isViewAttached()) {
-                            getView().showCollectEvent(collectEvent.getPosition());
-                        }
-                    }
-                }));
-        addDisposable(RxBus.getInstance()
-                .toObservable(LoginEvent.class)
-                .subscribe(new Consumer<LoginEvent>() {
-                    @Override
-                    public void accept(LoginEvent loginEvent) throws Exception {
-                        if(isViewAttached()){
-                            getView().showLoginEvent();
-                        }
-                    }
-                }));
-        addDisposable(RxBus.getInstance()
-                .toObservable(LogoutEvent.class)
-                .subscribe(new Consumer<LogoutEvent>() {
-                    @Override
-                    public void accept(LogoutEvent logoutEvent) throws Exception {
-                        if(isViewAttached()){
-                            getView().showLogoutEvent();
-                        }
-                    }
-                }));
+
     }
 }

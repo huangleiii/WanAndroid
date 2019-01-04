@@ -21,7 +21,9 @@ public interface MainActivityContract {
 
         void showLogoutFailed(String msg);
 
+        void subscribeLoginExpiredEvent();
         void subscribeLoginEvent();
-        void subscribeUnLoginEvent();
+        void subscribeCancelCollectEvent(String activityName);
+        void subscribeCollectEvent(String activityName);
     }
 }
