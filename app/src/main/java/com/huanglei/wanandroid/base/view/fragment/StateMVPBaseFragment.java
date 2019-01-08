@@ -46,7 +46,7 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
         mErrorView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareRequestData(true);
+                requestData();
             }
         });
         mErrorView.setVisibility(View.GONE);
@@ -59,7 +59,7 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
     public void onStart() {
         super.onStart();
         if(currentState==STATE_ERROR){
-            prepareRequestData(true);
+            requestData();
         }
     }
     protected boolean isNormal(){

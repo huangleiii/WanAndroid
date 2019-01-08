@@ -69,20 +69,16 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewFragmentHome.setLayoutManager(linearLayoutManager);
         recyclerViewFragmentHome.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        normal.setEnableRefresh(true);
         normal.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mHomeAdapter.setEnableLoadMore(false);
                 getPresenter().getListData();
                 getPresenter().getBannerData();
             }
         });
-        mHomeAdapter.setEnableLoadMore(true);
         mHomeAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
-                normal.setEnableRefresh(false);
                 getPresenter().addListData(++page);
             }
         }, recyclerViewFragmentHome);
@@ -94,8 +90,7 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                mClickPosition = -1;
-                ArticleDetailActivity.startArticleDetailActivity(getContext(),  titles.get(position),
+                ArticleDetailActivity.startArticleDetailActivity(getContext(), titles.get(position),
                         urls.get(position));
             }
         });
@@ -137,7 +132,7 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mClickPosition = position;
                 ArticleDetailActivity.startArticleDetailActivity(getContext(), Constants.MAIN_ACTIVITY, ((Article) adapter.getItem(position)).getId(),
-                        ((Article) adapter.getItem(position)).getTitle(), ((Article) adapter.getItem(position)).getLink(),((Article)adapter.getItem(position)).isCollect());
+                        ((Article) adapter.getItem(position)).getTitle(), ((Article) adapter.getItem(position)).getLink(), ((Article) adapter.getItem(position)).isCollect());
             }
         });
     }
@@ -149,25 +144,25 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
 
     @Override
     protected void requestData() {
-        if (!isFirstRefresh) {
+        showLoading();
+        getPresenter().getListData();
+        getPresenter().getBannerData();
+    }
+
+    public void refreshView() {
+        if(isNormal()){
             recyclerViewFragmentHome.scrollToPosition(0);
-            mHomeAdapter.setEnableLoadMore(false);
             normal.autoRefresh();
-        } else {
-            showLoading();
-            getPresenter().getListData();
-            getPresenter().getBannerData();
         }
     }
 
 
     @Override
     public void showNewListDataSucceed(List<Article> articles) {
-        mHomeAdapter.replaceData(articles);
+        mHomeAdapter.setNewData(articles);//不同于replaceData()，这个方法可以刷新LoadMoreEnd的状态，使其可以再次LoadMore。
         page = 0;
         if (!isFirstRefresh) {
             normal.finishRefresh(true);
-            mHomeAdapter.setEnableLoadMore(true);
         } else {
             showNormal();
             isFirstRefresh = false;
@@ -178,11 +173,10 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     public void showNewListDataFailed(String errorMsg) {
         if (!isFirstRefresh) {
             normal.finishRefresh(false);
-            mHomeAdapter.setEnableLoadMore(true);
+            CommonUtils.showToastMessage(getActivity(), errorMsg);
         } else {
             showError();
         }
-        CommonUtils.showToastMessage(getActivity(), errorMsg);
     }
 
     @Override
@@ -221,12 +215,13 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
             mBanner.startAutoPlay();
     }
 
-    @Override
-    public void updateView() {
-        if (!(mClickPosition < 0)) {
-            mHomeAdapter.getItem(mClickPosition).setCollect(!mHomeAdapter.getItem(mClickPosition).isCollect());
-            mHomeAdapter.notifyItemChanged(mClickPosition + 1);//这里要加1是因为要把recyclerView的headerView算上。
-        }
+    public void updateCollectState(boolean isCollected) {
+        mHomeAdapter.getItem(mClickPosition).setCollect(isCollected);
+        mHomeAdapter.notifyItemChanged(mClickPosition + 1);//这里要加1是因为要把recyclerView的headerView算上。
+    }
+
+    public void jumpToTop() {
+        recyclerViewFragmentHome.smoothScrollToPosition(0);
     }
 
     @Override
@@ -240,21 +235,20 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     @Override
     public void showAddListDataSucceed(List<Article> articles) {
         if (articles.isEmpty()) {
-            mHomeAdapter.loadMoreEnd();
+            mHomeAdapter.loadMoreEnd(true);
+            CommonUtils.showToastMessage(getActivity(),"无更多数据");
             page--;
         } else {
             mHomeAdapter.addData(articles);
             mHomeAdapter.loadMoreComplete();
         }
-        normal.setEnableRefresh(true);
     }
 
     @Override
     public void showAddListDataFailed(String errorMsg) {
         mHomeAdapter.loadMoreFail();
-        normal.setEnableRefresh(true);
-        CommonUtils.showToastMessage(getActivity(), errorMsg);
         page--;
+        CommonUtils.showToastMessage(getActivity(), errorMsg);
     }
 
     @Override
@@ -263,7 +257,7 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     }
 
     @Override
-    public void showCollectFailed(int position, String errorMsg) {
+    public void showCollectFailed(int position,List<Article> articles, String errorMsg) {
         mHomeAdapter.getItem(position).setCollect(false);
         mHomeAdapter.notifyItemChanged(position + 1);
         CommonUtils.showToastMessage(getActivity(), errorMsg);
@@ -275,36 +269,13 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
     }
 
     @Override
-    public void showCancelCollectFailed(int position, String errorMsg) {
+    public void showCancelCollectFailed(int position,List<Article> articles, String errorMsg) {
         mHomeAdapter.getItem(position).setCollect(true);
         mHomeAdapter.notifyItemChanged(position + 1);
         CommonUtils.showToastMessage(getActivity(), errorMsg);
 
     }
 
-//    @Override
-//    public void showCancelCollectEvent(int position) {
-//        mHomeAdapter.getItem(position).setCollect(false);
-////        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
-//        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
-//    }
-//
-//    @Override
-//    public void showCollectEvent(int position) {
-//        mHomeAdapter.getItem(position).setCollect(true);
-////        mHomeAdapter.setData(position,mHomeAdapter.getItem(position));
-//        mHomeAdapter.notifyItemChanged(position + 1);//这里要加1是因为要把recyclerView的headerView算上。
-//    }
-//
-//    @Override
-//    public void showLoginEvent() {
-//        prepareRequestData(true);
-//    }
-//
-//    @Override
-//    public void showLogoutEvent() {
-//        prepareRequestData(true);
-//    }
 
     @Override
     public Context getViewContext() {

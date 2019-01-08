@@ -14,22 +14,27 @@ import java.util.List;
 
 public interface SearchActivityContract {
     interface Presenter extends IBasePresenter<View>{
-        void getSearchArticleList(String key);
-        void addSearchArticleList(String key,int page);
         void getHotSearchKeywords();
         void getHistorySearchKeywords();
+        void addHistorySearchKeyword(String keyword);
+        void deleteHistorySearchKeyword(int position,String keyword);
+        void clearHistorySearchKeywords();
     }
     interface View extends IBaseView{
-        void showSearchArticleListSucceed(List<Article> articleList);
-        void showSearchArticleListFailed(String errorMsg);
-
-        void showAddSearchArticleListSucceed(List<Article> articles);
-        void showAddSearchArticleListFailed(String errorMsg);
 
         void showHotSearchKeywordsSucceed(List<HotKey> keys);
         void showHotSearchKeywordsFailed(String errorMs);
 
         void showHistorySearchKeywordsSucceed(List<HistoryKeyword> keys);
         void showHistorySearchKeywordsFailed(String errorMsg);
+
+        void showAddHistorySearchKeywordSucceed(List<HistoryKeyword> keys);
+        void showAddHistorySearchKeywordFailed(String errorMsg);
+
+        void showDeleteHistorySearchKeywordSucceed(int position);
+        void showDeleteHistorySearchKeywordFailed(String errorMsg);
+
+        void showClearHistorySearchKeywordsSucceed();
+        void showClearHistorySearchKeywordsFailed(String errorMsg);
     }
 }

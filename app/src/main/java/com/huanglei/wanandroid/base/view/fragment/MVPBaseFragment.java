@@ -90,8 +90,6 @@ public abstract class MVPBaseFragment<T extends IBasePresenter> extends Fragment
 
     protected abstract void requestData();
 
-    public abstract void updateView();
-
     @Override
     public void onDestroyView() {
         if (mPresenter != null)

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DbHelper {
     private static volatile DbHelper mDbHelper;
-    private static final int HISTORY_LIST_SIZE=10;
+    private static final int HISTORY_LIST_SIZE=20;
     private DbHelper(){}
     public static DbHelper getInstance(){
         if(mDbHelper==null){
@@ -29,12 +29,10 @@ public class DbHelper {
                 .list();
     }
     public void clearHistoryKeywords(){
-        WanAndroidApplication.getDaoSession().deleteAll(HistoryKeyword.class);
+        WanAndroidApplication.getDaoSession().getHistoryKeywordDao().deleteAll();
     }
-    public long addHistoryKeyword(String data){
-        HistoryKeyword historyKeyword=new HistoryKeyword();
-        historyKeyword.setData(data);
-        historyKeyword.setDate(System.currentTimeMillis());
+    public List<HistoryKeyword> addHistoryKeyword(String data){
+        HistoryKeyword historyKeyword=new HistoryKeyword(null,data,System.currentTimeMillis());
         deleteHistoryKeyword(data);
         long count=WanAndroidApplication.getDaoSession().queryBuilder(HistoryKeyword.class).count();
         if(!(count<HISTORY_LIST_SIZE)){
@@ -43,16 +41,17 @@ public class DbHelper {
                     .limit(1)
                     .list()
                     .get(0);
-            WanAndroidApplication.getDaoSession().delete(historyKeyword1);
+            WanAndroidApplication.getDaoSession().getHistoryKeywordDao().delete(historyKeyword1);
         }
-        return WanAndroidApplication.getDaoSession().insert(historyKeyword);
+        WanAndroidApplication.getDaoSession().getHistoryKeywordDao().insert(historyKeyword);
+        return getHistoryKeywords();
     }
     public void deleteHistoryKeyword(String data){
         Iterator<HistoryKeyword> iterator=getHistoryKeywords().iterator();
         while(iterator.hasNext()){
-            HistoryKeyword historyKeywory=iterator.next();
-            if(historyKeywory.getData().equals(data)){
-                iterator.remove();
+            HistoryKeyword historyKeyword=iterator.next();
+            if(historyKeyword.getData().equals(data)){
+                WanAndroidApplication.getDaoSession().getHistoryKeywordDao().delete(historyKeyword);
             }
         }
     }

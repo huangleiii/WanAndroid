@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/favorite_navigation_menu"
-        android:icon="@drawable/ic_favorite_border_white_24dp"
+        android:icon="@drawable/ic_favorite_border_black_24dp"
         android:title="我的收藏" />
     <item
         android:id="@+id/todo_navigation_menu"

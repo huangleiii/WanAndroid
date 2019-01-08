@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,13 +26,12 @@ import android.widget.TextView;
 import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
-import com.huanglei.wanandroid.base.view.fragment.MVPBaseFragment;
-import com.huanglei.wanandroid.base.view.fragment.StateMVPBaseFragment;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.huanglei.wanandroid.widget.MyProgressDialog;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter> implements MainActivityContract.View {
@@ -54,6 +55,8 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     TextView tvTitleActivityMain;
     @BindView(R.id.navigation_activity_main)
     NavigationView navigationActivityMain;
+    @BindView(R.id.float_button_activity_main)
+    FloatingActionButton floatButtonActivityMain;
     private LinearLayout mHeaderLinearLayout;
     private CircleImageView mHeaderCircleImageView;
     private TextView mHeaderTextView;
@@ -91,7 +94,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                 switch (menuItem.getItemId()) {
                     case R.id.home_bottom_menu:
                         if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
-                            StateMVPBaseFragment currentFragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                            Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
                             mFragmentTransaction.hide(currentFragment);
                         }
                         if (mFragmentManager.findFragmentByTag(TAG_PAGE_HOME) == null) {
@@ -125,6 +128,11 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.favorite_navigation_menu:
+                        if (getPresenter().getLoginStatus()) {
+                            startActivity(new Intent(MainActivity.this, CollectActivity.class));
+                        } else {
+                            CommonUtils.showToastMessage(MainActivity.this, "请先登录");
+                        }
                         break;
                     case R.id.todo_navigation_menu:
                         break;
@@ -170,11 +178,17 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
         if (getPresenter().getLoginStatus()) {
             showLogin(getPresenter().getUsername());
         }
+        floatButtonActivityMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jumpToTop();
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -185,9 +199,10 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                 drawerLayoutActivityMain.openDrawer(navigationActivityMain);
                 break;
             case R.id.hot_website_main_menu:
-                startActivity(new Intent(this,HotWebsiteActivity.class));
+                startActivity(new Intent(this, HotWebsiteActivity.class));
                 break;
             case R.id.search_main_menu:
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             default:
                 break;
@@ -198,6 +213,18 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
 
     @Override
     protected void requestData() {
+    }
+
+
+    private void jumpToTop() {
+        if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
+            Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+            if (fragment != null) {
+                if (fragment instanceof HomeFragment) {
+                    ((HomeFragment) fragment).jumpToTop();
+                }
+            }
+        }
     }
 
     @Override
@@ -216,6 +243,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
         myProgressDialog.dismiss();
         CommonUtils.showToastMessage(this, "退出登录成功");
         showUnLogin();
+        refreshCurrentFragment();
         startActivity(new Intent(this, LoginActivity.class));
     }
 
@@ -228,15 +256,18 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     @Override
     public void subscribeLoginEvent() {
         showLogin(getPresenter().getUsername());
+        refreshCurrentFragment();
     }
 
     @Override
     public void subscribeCancelCollectEvent(String activityName) {
-        if(activityName.equals(Constants.MAIN_ACTIVITY)){
-            if(!TextUtils.isEmpty(mCurrentFragmentTag)){
-                StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-                if(fragment!=null){
-                    fragment.updateView();
+        if (activityName.equals(Constants.MAIN_ACTIVITY)) {
+            if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
+                Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                if (fragment != null) {
+                    if (fragment instanceof HomeFragment) {
+                        ((HomeFragment) fragment).updateCollectState(false);
+                    }
                 }
             }
         }
@@ -244,11 +275,13 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
 
     @Override
     public void subscribeCollectEvent(String activityName) {
-        if(activityName.equals(Constants.MAIN_ACTIVITY)){
-            if(!TextUtils.isEmpty(mCurrentFragmentTag)){
-                StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-                if(fragment!=null){
-                    fragment.updateView();
+        if (activityName.equals(Constants.MAIN_ACTIVITY)) {
+            if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
+                Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                if (fragment != null) {
+                    if (fragment instanceof HomeFragment) {
+                        ((HomeFragment) fragment).updateCollectState(true);
+                    }
                 }
             }
         }
@@ -257,24 +290,26 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     @Override
     public void subscribeLoginExpiredEvent() {
         showUnLogin();
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void showLogin(String username){
+    private void showLogin(String username) {
         mHeaderTextView.setText(username);
         navigationActivityMain.getMenu().getItem(LOG_OUT).setVisible(true);
-        refreshCurrentFragment();
     }
-    private void showUnLogin(){
+
+    private void showUnLogin() {
         mHeaderTextView.setText("登录");
         navigationActivityMain.getMenu().getItem(LOG_OUT).setVisible(false);
-        refreshCurrentFragment();
     }
-    private void refreshCurrentFragment(){
-        if(!TextUtils.isEmpty(mCurrentFragmentTag)){
-            StateMVPBaseFragment fragment=(StateMVPBaseFragment) mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-            if(fragment!=null&&fragment.isShown()){
-                fragment.prepareRequestData(true);
+
+    private void refreshCurrentFragment() {
+        if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
+            Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+            if (fragment != null) {
+                if (fragment instanceof HomeFragment) {
+                    ((HomeFragment) fragment).refreshView();
+                }
             }
         }
     }

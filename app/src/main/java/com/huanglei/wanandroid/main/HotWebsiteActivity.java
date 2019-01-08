@@ -64,6 +64,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
         getPresenter().getHotWebsiteList();
     }
 
+
     @Override
     public Context getViewContext() {
         return this;
@@ -77,7 +78,6 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
             public View getView(FlowLayout parent, int position, HotWebsite hotWebsite) {
                 TextView textView = (TextView) getLayoutInflater().inflate(R.layout.item_flowlayout_hotwebsite, parent, false);
                 textView.setText(hotWebsite.getName());
-
                 return textView;
             }
         });
@@ -86,6 +86,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 ArticleDetailActivity.startArticleDetailActivity(HotWebsiteActivity.this,
                         mHotWebsites.get(position).getName(),mHotWebsites.get(position).getLink());
+                finish();
                 return true;
             }
         });
@@ -113,4 +114,9 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
         return new HotWebsiteActivityPresenter();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0,0);//将原生的退场动画去除掉，这样才不会对style中设置的动画产生干扰
+    }
 }

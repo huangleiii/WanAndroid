@@ -6,6 +6,7 @@ import android.content.Context;
 import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.model.db.DaoMaster;
 import com.huanglei.wanandroid.model.db.DaoSession;
+import com.huanglei.wanandroid.model.db.MyDaoMasterOpenHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
@@ -40,21 +41,25 @@ public class WanAndroidApplication extends Application{
 //            }
 //        });
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mContext=getApplicationContext();
         setupDataBase();
     }
+
     public static Context getInstance(){
         return mContext;
     }
+
     private void setupDataBase(){
-        DaoMaster.DevOpenHelper openHelper=new DaoMaster.DevOpenHelper(this,Constants.HISTORY_SEARCH_KEYWORDS_DATABASE_NAME);
+        MyDaoMasterOpenHelper openHelper=new MyDaoMasterOpenHelper(this,Constants.HISTORY_SEARCH_KEYWORDS_DATABASE_NAME);
         Database db=openHelper.getWritableDb();
         DaoMaster daoMaster=new DaoMaster(db);
         mDaoSession=daoMaster.newSession();
     }
+
     public static DaoSession getDaoSession(){
         return mDaoSession;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,10 +101,6 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
 
     }
 
-    @Override
-    public void subscribeLoginExpiredEvent() {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
 
     @Override
     protected int getLayoutId() {
@@ -116,7 +113,7 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
         setSupportActionBar(toolbarActivityArticleDetail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        tvTitleActivityArticleDetail.setText(articleTitle);
+        tvTitleActivityArticleDetail.setText(Html.fromHtml(articleTitle));
     }
 
     @Override

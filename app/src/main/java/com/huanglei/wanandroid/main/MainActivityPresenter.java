@@ -57,14 +57,7 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
 
     @Override
     protected void registerEvent() {
-        addDisposable(RxBus.getInstance().toObservable(LoginEvent.class)
-                .subscribe(new Consumer<LoginEvent>() {
-                    @Override
-                    public void accept(LoginEvent loginEvent) throws Exception {
-                        if (isViewAttached())
-                            getView().subscribeLoginEvent();
-                    }
-                }));
+
         addDisposable(RxBus.getInstance().toObservable(LoginExpiredEvent.class)
                 .subscribe(new Consumer<LoginExpiredEvent>() {
                     @Override
@@ -73,7 +66,14 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                             getView().subscribeLoginExpiredEvent();
                     }
                 }));
-
+        addDisposable(RxBus.getInstance().toObservable(LoginEvent.class)
+                .subscribe(new Consumer<LoginEvent>() {
+                    @Override
+                    public void accept(LoginEvent loginEvent) throws Exception {
+                        if (isViewAttached())
+                            getView().subscribeLoginEvent();
+                    }
+                }));
         addDisposable(RxBus.getInstance()
                 .toObservable(CancelCollectEvent.class)
                 .subscribe(new Consumer<CancelCollectEvent>() {

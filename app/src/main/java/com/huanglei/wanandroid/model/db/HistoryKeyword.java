@@ -10,11 +10,11 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class HistoryKeyword {
     @Id(autoincrement = true)
-    private long id;
+    private Long id;//注意为Long型而非long，赋值为null可自动增加
     private String data;
-    private long date;
-    @Generated(hash = 953949518)
-    public HistoryKeyword(long id, String data, long date) {
+    private Long date;
+    @Generated(hash = 1593705847)
+    public HistoryKeyword(Long id, String data, Long date) {
         this.id = id;
         this.data = data;
         this.date = date;
@@ -22,10 +22,10 @@ public class HistoryKeyword {
     @Generated(hash = 32903645)
     public HistoryKeyword() {
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getData() {
@@ -34,10 +34,10 @@ public class HistoryKeyword {
     public void setData(String data) {
         this.data = data;
     }
-    public long getDate() {
+    public Long getDate() {
         return this.date;
     }
-    public void setDate(long date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 }

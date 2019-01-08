@@ -7,6 +7,13 @@
     android:padding="10dp">
 
     <ImageView
+        android:id="@+id/img_collect_item_fragment_project"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:src="@drawable/ic_favorite_grey_24dp" />
+    <ImageView
         android:id="@+id/img_item_fragment_project"
         android:layout_width="100dp"
         android:layout_height="match_parent"
@@ -48,18 +55,16 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_tag_project_item_fragment_project"
         android:gravity="center"
-        android:text="作者"
-        android:textColor="@color/grey" />
+        android:text="作者" />
 
     <TextView
         android:id="@+id/tv_date_item_fragment_project"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/img_collect_item_fragment_project"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="2018-08-10"
-        android:textColor="@color/grey" />
+        android:text="2018-08-10"/>
 
     <TextView
         android:id="@+id/tv_title_item_fragment_project"
@@ -67,13 +72,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_author_item_fragment_project"
         android:layout_toRightOf="@+id/img_item_fragment_project"
+        android:layout_toLeftOf="@id/img_collect_item_fragment_project"
         android:gravity="center_vertical"
         android:maxLines="2"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
-        android:textColor="@color/black"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tv_type_item_fragment_project"
@@ -81,16 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/img_item_fragment_project"
-        android:gravity="center"
-        android:text="类型"
-        android:textColor="@color/grey" />
+        android:layout_toLeftOf="@id/img_collect_item_fragment_project"
+        android:gravity="center_vertical"
+        android:text="类型" />
 
-    <ImageView
-        android:id="@+id/img_collect_item_fragment_project"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:clickable="true"
-        android:src="@drawable/ic_favorite_grey_24dp" />
 </RelativeLayout>

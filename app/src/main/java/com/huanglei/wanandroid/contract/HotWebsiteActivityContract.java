@@ -12,11 +12,11 @@ import java.util.List;
  */
 
 public interface HotWebsiteActivityContract {
+    interface Presenter extends IBasePresenter<View>{
+        void getHotWebsiteList();
+    }
     interface View extends IBaseView{
         void showHotWebsiteListSucceed(List<HotWebsite> hotWebsites);
         void showHotWebsiteListFailed(String errorMsg);
-    }
-    interface Presenter extends IBasePresenter<View>{
-        void getHotWebsiteList();
     }
 }

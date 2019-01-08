@@ -2,6 +2,8 @@ package com.huanglei.wanandroid.main;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -29,10 +31,11 @@ private Context mContext;
     protected void convert(BaseViewHolder helper, Article item) {
         switch (helper.getItemViewType()){
             case Article.TYPE_ARTICLE:
-                helper.setText(R.id.tv_title_item_fragment_home,item.getTitle())
+                helper.setText(R.id.tv_title_item_fragment_home, Html.fromHtml(item.getTitle()))
                         .setText(R.id.tv_date_item_fragment_home,item.getNiceDate())
                         .setText(R.id.tv_author_item_fragment_home,item.getAuthor())
-                        .setText(R.id.tv_type_item_fragment_home,item.getSuperChapterName()+"/"+item.getChapterName())
+                        .setText(R.id.tv_type_item_fragment_home,(!TextUtils.isEmpty(item.getSuperChapterName()))&&(!TextUtils.isEmpty(item.getChapterName()))?
+                                item.getSuperChapterName()+"/"+item.getChapterName():"")
                         .setImageResource(R.id.img_collect_item_fragment_home,
                                 item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_grey_24dp)
                         .setGone(R.id.tv_tag_new_item_fragment_home,item.isFresh())
@@ -41,10 +44,11 @@ private Context mContext;
                         .addOnClickListener(R.id.tv_type_item_fragment_home);
                 break;
             case Article.TYPE_PROJECT:
-                helper.setText(R.id.tv_title_item_fragment_project,item.getTitle())
+                helper.setText(R.id.tv_title_item_fragment_project,Html.fromHtml(item.getTitle()))
                         .setText(R.id.tv_date_item_fragment_project,item.getNiceDate())
                         .setText(R.id.tv_author_item_fragment_project,item.getAuthor())
-                        .setText(R.id.tv_type_item_fragment_project,item.getSuperChapterName()+"/"+item.getChapterName())
+                        .setText(R.id.tv_type_item_fragment_project,(!TextUtils.isEmpty(item.getSuperChapterName()))&&(!TextUtils.isEmpty(item.getChapterName()))?
+                                item.getSuperChapterName()+"/"+item.getChapterName():"")
                         .setImageResource(R.id.img_collect_item_fragment_project,
                                 item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_grey_24dp)
                         .setGone(R.id.tv_tag_new_item_fragment_project,item.isFresh())

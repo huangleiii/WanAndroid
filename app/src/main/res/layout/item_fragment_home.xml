@@ -6,6 +6,13 @@
     android:padding="10dp"
     android:descendantFocusability="blocksDescendants">
 
+    <ImageView
+        android:id="@+id/img_collect_item_fragment_home"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_favorite_grey_24dp"
+        android:clickable="true"/>
     <TextView
         android:id="@+id/tv_tag_new_item_fragment_home"
         android:layout_width="wrap_content"
@@ -41,22 +48,21 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_tag_weixin_item_fragment_home"
         android:text="作者"
-        android:textColor="@color/grey"
         android:gravity="center"/>
     <TextView
         android:id="@+id/tv_date_item_fragment_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/img_collect_item_fragment_home"
         android:layout_alignParentTop="true"
         android:text="2018-08-10"
-        android:textColor="@color/grey"
         android:gravity="center"/>
     <TextView
         android:id="@+id/tv_title_item_fragment_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_author_item_fragment_home"
+        android:layout_toLeftOf="@id/img_collect_item_fragment_home"
         android:layout_alignParentLeft="true"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -72,14 +78,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:text="类型哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈斤"
-        android:textColor="@color/grey"
         android:gravity="center"/>
-    <ImageView
-        android:id="@+id/img_collect_item_fragment_home"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_favorite_grey_24dp"
-        android:clickable="true"/>
 </RelativeLayout>

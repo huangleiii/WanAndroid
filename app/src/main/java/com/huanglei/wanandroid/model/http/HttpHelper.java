@@ -8,10 +8,10 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.app.WanAndroidApplication;
 import com.huanglei.wanandroid.model.bean.Account;
-import com.huanglei.wanandroid.model.bean.Article;
+import com.huanglei.wanandroid.model.bean.ArticleInCollectPageList;
 import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
-import com.huanglei.wanandroid.model.bean.HomeArticleList;
+import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
 import com.huanglei.wanandroid.utils.CommonUtils;
@@ -65,7 +65,7 @@ public class HttpHelper {
                     //注意这里要将build的结果赋值回response
                     response = response.newBuilder()
                             .removeHeader("Pragma")
-                            //这里不能时no-cache,不然即使下面修改请求头为force_cache也无法读取缓存
+                            //这里不能是no-cache,不然即使下面修改请求头为force_cache也无法读取缓存
                             .header("Cache-Control", "public, max-age=0")
                             .build();
                 }
@@ -100,11 +100,11 @@ public class HttpHelper {
                 /*
                 okhttp请求时拦截器执行顺序 自定义应用拦截器>内部缓存拦截器>自定义网络拦截器，响应时原路返回。
                       其中内部缓存拦截器用来存储缓存，并根据头部属性决定是否读取缓存，所以当其将响应数据返回给自定义应用拦截器后
-                      再对头部进行修改是没有作用的，因为缓存的是修改前的头部信息，修改后的无法缓存。
+                      再对头部进行修改是没有作用的，因为缓存的是修改前的头部信息，修改后的不会缓存。
                       在请求过程中，如果内部缓存拦截器判断读取缓存，就不会执行后续的自定义网络拦截器，直接读取缓存数据并返回响应。
 
-                      所以在线时，修改自定义网络拦截器中的响应头，在服务器没有定义缓存策略的情况下执行我们定义的缓存策略。
-                      离线时，根本不会执行自定义网络拦截器，所以修改自定义应用拦截器，通过修改请求头的方式定义缓存策略。
+                      所以在线时，修改自定义网络拦截器中的 响应 头，在服务器没有定义缓存策略的情况下执行我们定义的缓存策略。
+                      离线时，根本不会执行自定义网络拦截器，所以修改自定义应用拦截器，通过修改 请求 头的方式定义缓存策略。
 
                       主要还是通过修改请求头的方式来定义缓存策略，修改响应头仅用于服务器没有定义缓存策略而我们又需要的情况下。
                  */
@@ -134,7 +134,7 @@ public class HttpHelper {
         return mWanAndroidApis;
     }
 
-    public Observable<BaseResponse<HomeArticleList>> getHomeArticleListData(int num) {
+    public Observable<BaseResponse<ArticleList>> getHomeArticleListData(int num) {
         return mWanAndroidApis.getHomeArticleListData(num);
     }
 
@@ -164,11 +164,17 @@ public class HttpHelper {
     public Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList(){
         return mWanAndroidApis.getHotWebsiteList();
     }
-    public Observable<BaseResponse<HomeArticleList>> getSearchArticleList(String key,int page){
+    public Observable<BaseResponse<ArticleList>> getSearchArticleList(String key, int page){
         return mWanAndroidApis.getSearchArticleList(key,page);
     }
     public Observable<BaseResponse<List<HotKey>>> getSearchHotKeys(){
         return mWanAndroidApis.getSearchHotKeys();
+    }
+    public Observable<BaseResponse<Object>> cancelCollectInCollectPage(int id){
+        return mWanAndroidApis.cancelCollectInCollectPage(id,-1);
+    }
+    public Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(int page){
+        return mWanAndroidApis.getCollectArticles(page);
     }
 
 }

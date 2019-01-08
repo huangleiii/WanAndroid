@@ -6,6 +6,7 @@ import com.huanglei.wanandroid.event.CancelCollectEvent;
 import com.huanglei.wanandroid.event.CollectEvent;
 import com.huanglei.wanandroid.event.LoginExpiredEvent;
 import com.huanglei.wanandroid.event.RxBus;
+import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.http.HttpHelper;
 import com.huanglei.wanandroid.utils.ErrorConsumer;
 import com.huanglei.wanandroid.utils.RxUtils;
@@ -37,6 +38,9 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                 }, new ErrorConsumer<Throwable>() {
                     @Override
                     protected void onError(int errorCode, String errorMessage) {
+                        if(errorCode== BaseResponse.LOGIN_FAILED){
+                            RxBus.getInstance().post(new LoginExpiredEvent());
+                        }
                         if (isViewAttached()) {
                             getView().showCollectFailed(errorMessage);
                         }
@@ -63,6 +67,9 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                 }, new ErrorConsumer<Throwable>() {
                     @Override
                     protected void onError(int errorCode, String errorMessage) {
+                        if(errorCode== BaseResponse.LOGIN_FAILED){
+                            RxBus.getInstance().post(new LoginExpiredEvent());
+                        }
                         if (isViewAttached()) {
                             getView().showCancelCollectFailed(errorMessage);
                         }
@@ -72,14 +79,6 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
 
     @Override
     protected void registerEvent() {
-        addDisposable(RxBus.getInstance().toObservable(LoginExpiredEvent.class)
-                .subscribe(new Consumer<LoginExpiredEvent>() {
-                    @Override
-                    public void accept(LoginExpiredEvent loginExpiredEvent) throws Exception {
-                        if (isViewAttached())
-                            getView().subscribeLoginExpiredEvent();
-                    }
-                }));
 
     }
 }

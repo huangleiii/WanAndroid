@@ -22,9 +22,9 @@ public class HistoryKeywordDao extends AbstractDao<HistoryKeyword, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Id = new Property(0, long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Data = new Property(1, String.class, "data", false, "DATA");
-        public final static Property Date = new Property(2, long.class, "date", false, "DATE");
+        public final static Property Date = new Property(2, Long.class, "date", false, "DATE");
     }
 
 
@@ -40,9 +40,9 @@ public class HistoryKeywordDao extends AbstractDao<HistoryKeyword, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"HISTORY_KEYWORD\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 0: id
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"DATA\" TEXT," + // 1: data
-                "\"DATE\" INTEGER NOT NULL );"); // 2: date
+                "\"DATE\" INTEGER);"); // 2: date
     }
 
     /** Drops the underlying database table. */
@@ -54,47 +54,63 @@ public class HistoryKeywordDao extends AbstractDao<HistoryKeyword, Long> {
     @Override
     protected final void bindValues(DatabaseStatement stmt, HistoryKeyword entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(2, data);
         }
-        stmt.bindLong(3, entity.getDate());
+ 
+        Long date = entity.getDate();
+        if (date != null) {
+            stmt.bindLong(3, date);
+        }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, HistoryKeyword entity) {
         stmt.clearBindings();
-        stmt.bindLong(1, entity.getId());
+ 
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
  
         String data = entity.getData();
         if (data != null) {
             stmt.bindString(2, data);
         }
-        stmt.bindLong(3, entity.getDate());
+ 
+        Long date = entity.getDate();
+        if (date != null) {
+            stmt.bindLong(3, date);
+        }
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 0);
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public HistoryKeyword readEntity(Cursor cursor, int offset) {
         HistoryKeyword entity = new HistoryKeyword( //
-            cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // data
-            cursor.getLong(offset + 2) // date
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // date
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, HistoryKeyword entity, int offset) {
-        entity.setId(cursor.getLong(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setData(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDate(cursor.getLong(offset + 2));
+        entity.setDate(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
      }
     
     @Override
@@ -114,7 +130,7 @@ public class HistoryKeywordDao extends AbstractDao<HistoryKeyword, Long> {
 
     @Override
     public boolean hasKey(HistoryKeyword entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getId() != null;
     }
 
     @Override

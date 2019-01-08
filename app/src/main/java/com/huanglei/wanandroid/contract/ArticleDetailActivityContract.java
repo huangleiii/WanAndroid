@@ -18,7 +18,5 @@ public interface ArticleDetailActivityContract {
 
         void showCancelCollectSucceed();
         void showCancelCollectFailed(String errorMsg);
-
-        void subscribeLoginExpiredEvent();
     }
 }
