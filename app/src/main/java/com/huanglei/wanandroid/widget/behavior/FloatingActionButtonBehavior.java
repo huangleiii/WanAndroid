@@ -34,7 +34,7 @@ public class FloatingActionButtonBehavior extends FloatingActionButton.Behavior{
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull FloatingActionButton child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         if(dy>0&&isShow&&!isAnimate){//手指上划隐藏
             ViewCompat.animate(child)
-                    .translationY(CommonUtils.dp2px(60)+child.getHeight())
+                    .translationY(350)
                     .setDuration(400)
                     .setInterpolator(new LinearOutSlowInInterpolator())
                     .setListener(new ViewPropertyAnimatorListener() {

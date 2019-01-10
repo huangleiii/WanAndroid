@@ -2,13 +2,14 @@ package com.huanglei.wanandroid.model.bean;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by HuangLei on 2018/11/14.
  */
 
-public class Article implements MultiItemEntity{
+public class Article implements MultiItemEntity,Serializable{
     private int id;
     private String author;
     private String title;

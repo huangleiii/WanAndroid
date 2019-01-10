@@ -8,6 +8,7 @@ import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
+import com.huanglei.wanandroid.model.bean.NavigationArticleList;
 
 import java.util.List;
 
@@ -64,4 +65,7 @@ public interface WanAndroidApis {
 
     @GET("lg/collect/list/{num}/json")
     Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(@Path("num") int num);
+
+    @GET("navi/json")
+    Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists();
 }

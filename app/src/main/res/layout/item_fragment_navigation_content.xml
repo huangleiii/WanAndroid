@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_item_fragment_navigation_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:lines="1"
+        android:padding="5dp"
+        android:text="test"/>
+    <com.zhy.view.flowlayout.TagFlowLayout
+        android:id="@+id/tagflowlayout_item_fragment_navigation_content"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></com.zhy.view.flowlayout.TagFlowLayout>
+</LinearLayout>

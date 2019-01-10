@@ -64,6 +64,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     private FragmentTransaction mFragmentTransaction;
     private String mCurrentFragmentTag;
     private HomeFragment mHomeFragment;
+    private NavigationFragment mNavigationFragment;
     private MyProgressDialog myProgressDialog;
 
     @Override
@@ -112,6 +113,19 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                     case R.id.weixin_bottom_menu:
                         break;
                     case R.id.navigation_bottom_menu:
+                        if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
+                            Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                            mFragmentTransaction.hide(currentFragment);
+                        }
+                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION) == null) {
+                            mNavigationFragment = NavigationFragment.newInstance();
+                            mFragmentTransaction.add(R.id.content_activity_main, mNavigationFragment, TAG_PAGE_NAVIGATION);
+                        } else {
+                            mNavigationFragment = (NavigationFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION);
+                        }
+                        mFragmentTransaction.show(mNavigationFragment);
+                        mCurrentFragmentTag = TAG_PAGE_NAVIGATION;
+                        tvTitleActivityMain.setText(R.string.title_page_navigation);
                         break;
                     case R.id.project_bottom_menu:
                         break;
@@ -222,6 +236,8 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
             if (fragment != null) {
                 if (fragment instanceof HomeFragment) {
                     ((HomeFragment) fragment).jumpToTop();
+                }else if(fragment instanceof NavigationFragment){
+                    ((NavigationFragment) fragment).jumpToTop();
                 }
             }
         }

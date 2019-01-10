@@ -14,6 +14,7 @@ import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
+import com.huanglei.wanandroid.model.bean.NavigationArticleList;
 import com.huanglei.wanandroid.utils.CommonUtils;
 
 import java.io.File;
@@ -175,6 +176,9 @@ public class HttpHelper {
     }
     public Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(int page){
         return mWanAndroidApis.getCollectArticles(page);
+    }
+    public Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists(){
+        return mWanAndroidApis.getNavigationLists();
     }
 
 }
