@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.huanglei.wanandroid.vp.main.weixin.WeixinListFragment">
+    tools:context="com.huanglei.wanandroid.vp.main.project.ProjectListFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_fragment_weixin_list"
+            android:id="@+id/recycler_fragment_project_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

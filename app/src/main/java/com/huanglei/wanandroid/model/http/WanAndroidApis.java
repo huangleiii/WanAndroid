@@ -19,6 +19,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by HuangLei on 2018/11/14.
@@ -62,7 +63,7 @@ public interface WanAndroidApis {
 
     @POST("lg/uncollect/{id}/json")
     @FormUrlEncoded
-    Observable<BaseResponse<Object>> cancelCollectInCollectPage(@Path("id") int id,@Field("originId") int originId);
+    Observable<BaseResponse<Object>> cancelCollectInCollectPage(@Path("id") int id, @Field("originId") int originId);
 
     @GET("lg/collect/list/{num}/json")
     Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(@Path("num") int num);
@@ -73,12 +74,13 @@ public interface WanAndroidApis {
     @GET("project/tree/json")
     Observable<BaseResponse<List<Tab>>> getProjectTrees();
 
-    @GET("project/list/{num}/json?cid={id}")
-    Observable<BaseResponse<ArticleList>> getProjectArticles(@Path("num") int num,@Path("id")int id);
+    @GET("project/list/{num}/json")
+    Observable<BaseResponse<ArticleList>> getProjectArticles(@Path("num") int num, @Query("cid") int id);
 
     @GET("wxarticle/chapters/json")
     Observable<BaseResponse<List<Tab>>> getWxTrees();
 
     @GET("wxarticle/list/{id}/{num}/json")
-    Observable<BaseResponse<ArticleList>> getWxArticles(@Path("num") int num,@Path("id")int id);
+    Observable<BaseResponse<ArticleList>> getWxArticles(@Path("num") int num, @Path("id") int id);
+
 }

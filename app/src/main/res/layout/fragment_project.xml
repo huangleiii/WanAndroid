@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.huanglei.wanandroid.vp.main.weixin.WeixinFragment">
+    tools:context="com.huanglei.wanandroid.vp.main.project.ProjectFragment">
 
     <LinearLayout
         android:id="@+id/normal"
@@ -12,14 +12,14 @@
         android:orientation="vertical">
 
         <com.flyco.tablayout.SlidingTabLayout
-            android:id="@+id/tab_layout_fragment_weixin"
+            android:id="@+id/tab_layout_fragment_project"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="?attr/colorPrimary"
             app:tl_textsize="16sp"></com.flyco.tablayout.SlidingTabLayout>
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager_content_fragment_weixin"
+            android:id="@+id/viewpager_content_fragment_project"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></android.support.v4.view.ViewPager>
     </LinearLayout>

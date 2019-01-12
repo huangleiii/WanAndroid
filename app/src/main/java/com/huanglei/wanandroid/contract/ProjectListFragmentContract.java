@@ -7,22 +7,22 @@ import com.huanglei.wanandroid.model.bean.Article;
 import java.util.List;
 
 /**
- * Created by 黄垒 on 2019/1/11.
+ * Created by 黄垒 on 2019/1/12.
  */
 
-public interface WeixinListFragmentContract {
+public interface ProjectListFragmentContract {
     interface Presenter extends IBasePresenter<View> {
-        void getWxArticles(int id);
-        void addWxArticles(int num,int id);
+        void getProjectArticles(int id);
+        void addProjectArticles(int num,int id);
         void collect(int position,List<Article> articles);
         void cancelCollect(int position,List<Article> articles);
     }
     interface View extends IBaseView {
-        void showWxArticlesSucceed(List<Article> articles);
-        void showWxArticlesFailed(String errorMsg);
+        void showProjectArticlesSucceed(List<Article> articles);
+        void showProjectArticlesFailed(String errorMsg);
 
-        void showAddWxArticlesSucceed(List<Article> articles);
-        void showAddWxArticlesFailed(String errorMsg);
+        void showAddProjectArticlesSucceed(List<Article> articles);
+        void showAddProjectArticlesFailed(String errorMsg);
 
         void showCollectSucceed(int position,List<Article> articles);
         void showCollectFailed(int position,List<Article> articles,boolean isLoginExpired,String errorMsg);

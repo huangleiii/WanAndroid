@@ -13,11 +13,11 @@
         android:icon="@drawable/ic_group_black_24dp"
         android:title="@string/title_page_weixin"/>
     <item
-        android:id="@+id/navigation_bottom_menu"
-        android:icon="@drawable/ic_navigation_black_24dp"
-        android:title="@string/title_page_navigation"/>
-    <item
         android:id="@+id/project_bottom_menu"
         android:icon="@drawable/ic_work_black_24dp"
         android:title="@string/title_page_project"/>
+    <item
+        android:id="@+id/navigation_bottom_menu"
+        android:icon="@drawable/ic_navigation_black_24dp"
+        android:title="@string/title_page_navigation"/>
 </menu>

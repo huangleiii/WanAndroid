@@ -35,10 +35,10 @@ public interface HomeFragmentContract {
         void showAddListDataFailed(String errorMsg);
 
         void showCollectSucceed(int position,List<Article> articles);
-        void showCollectFailed(int position,List<Article> articles,String errorMsg);
+        void showCollectFailed(int position,List<Article> articles,boolean isLoginExpired,String errorMsg);
 
         void showCancelCollectSucceed(int position,List<Article> articles);
-        void showCancelCollectFailed(int position,List<Article> articles,String errorMsg);
+        void showCancelCollectFailed(int position,List<Article> articles,boolean isLoginExpired,String errorMsg);
     }
 
 }

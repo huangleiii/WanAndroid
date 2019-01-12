@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".vp.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,23 +23,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.LoginActivity"
+            android:name=".vp.login.LoginActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".main.ArticleDetailActivity"
+            android:name=".vp.articledetail.ArticleDetailActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop" />
         <activity
-            android:name=".main.HotWebsiteActivity"
+            android:name=".vp.hotwebsite.HotWebsiteActivity"
             android:launchMode="singleTop"
             android:theme="@style/RoundCornerDialogActivityTheme" />
         <activity
-            android:name=".main.SearchActivity"
+            android:name=".vp.search.SearchActivity"
             android:launchMode="singleTop"
             android:theme="@style/RoundCornerDialogActivityTheme" />
-        <activity android:name=".main.SearchListActivity" />
-        <activity android:name=".main.CollectActivity" />
+        <activity android:name=".vp.search.SearchListActivity" />
+        <activity android:name=".vp.collect.CollectActivity" />
     </application>
 
 </manifest>

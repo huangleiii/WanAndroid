@@ -15,8 +15,6 @@ public interface MainActivityContract {
 
         void logout();
         void setLoginStatus(boolean isLogin,String username);
-        void setCurrentActivity(String activityName);
-        String getCurrentActivity();
     }
 
     interface View extends IBaseView {
@@ -25,8 +23,8 @@ public interface MainActivityContract {
         void showLogoutFailed(String msg);
 
         void subscribeLoginExpiredEvent();
-        void subscribeLoginEvent();
-        void subscribeCancelCollectEvent();
-        void subscribeCollectEvent();
+        void subscribeLoginEvent(String activityName);
+        void subscribeCancelCollectEvent(String activityName);
+        void subscribeCollectEvent(String activityName);
     }
 }

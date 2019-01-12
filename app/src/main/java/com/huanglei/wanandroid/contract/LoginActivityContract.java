@@ -10,7 +10,7 @@ import com.huanglei.wanandroid.model.bean.Account;
 
 public interface LoginActivityContract {
     interface Presenter extends IBasePresenter<View>{
-        void login(String username,String password);
+        void login(String activityName,String username,String password);
         void register(String username,String password,String repassword);
         void setLoginStatus(boolean isLogin,String username);
     }
