@@ -70,7 +70,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"></com.zhy.view.flowlayout.TagFlowLayout>
-
+            <RelativeLayout
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:padding="5dp"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerInParent="true">
+                    <ProgressBar
+                        android:id="@+id/progress_bar_loading"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="正在加载，请稍候……"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="15sp"/>
+                </LinearLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/retry_error"
+                android:padding="5dp"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/tv_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="加载失败，请点击屏幕重新加载"
+                    android:textSize="15sp"
+                    android:textColor="@color/red"/>
+            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

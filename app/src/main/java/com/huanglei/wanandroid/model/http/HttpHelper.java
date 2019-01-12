@@ -15,6 +15,7 @@ import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
 import com.huanglei.wanandroid.model.bean.NavigationArticleList;
+import com.huanglei.wanandroid.model.bean.Tab;
 import com.huanglei.wanandroid.utils.CommonUtils;
 
 import java.io.File;
@@ -165,8 +166,8 @@ public class HttpHelper {
     public Observable<BaseResponse<List<HotWebsite>>> getHotWebsiteList(){
         return mWanAndroidApis.getHotWebsiteList();
     }
-    public Observable<BaseResponse<ArticleList>> getSearchArticleList(String key, int page){
-        return mWanAndroidApis.getSearchArticleList(key,page);
+    public Observable<BaseResponse<ArticleList>> getSearchArticleList(String key, int num){
+        return mWanAndroidApis.getSearchArticleList(key,num);
     }
     public Observable<BaseResponse<List<HotKey>>> getSearchHotKeys(){
         return mWanAndroidApis.getSearchHotKeys();
@@ -174,11 +175,23 @@ public class HttpHelper {
     public Observable<BaseResponse<Object>> cancelCollectInCollectPage(int id){
         return mWanAndroidApis.cancelCollectInCollectPage(id,-1);
     }
-    public Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(int page){
-        return mWanAndroidApis.getCollectArticles(page);
+    public Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(int num){
+        return mWanAndroidApis.getCollectArticles(num);
     }
     public Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists(){
         return mWanAndroidApis.getNavigationLists();
+    }
+    public Observable<BaseResponse<List<Tab>>> getProjectTrees(){
+        return mWanAndroidApis.getProjectTrees();
+    }
+    public Observable<BaseResponse<ArticleList>> getProjectArticles(int num,int id){
+        return mWanAndroidApis.getProjectArticles(num,id);
+    }
+    public Observable<BaseResponse<List<Tab>>> getWxTrees(){
+        return mWanAndroidApis.getWxTrees();
+    }
+    public Observable<BaseResponse<ArticleList>> getWxArticles(int num,int id){
+        return mWanAndroidApis.getWxArticles(num,id);
     }
 
 }

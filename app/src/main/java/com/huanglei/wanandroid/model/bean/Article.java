@@ -9,7 +9,7 @@ import java.util.List;
  * Created by HuangLei on 2018/11/14.
  */
 
-public class Article implements MultiItemEntity,Serializable{
+public class Article implements MultiItemEntity{
     private int id;
     private String author;
     private String title;

@@ -158,6 +158,7 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
 
     @Override
     public void loginSucceed(Account account) {
+        getPresenter().setLoginStatus(true,account.getUsername());
         mMyProgressDialog.dismiss();
         CommonUtils.showToastMessage(this, "登录成功");
         finish();

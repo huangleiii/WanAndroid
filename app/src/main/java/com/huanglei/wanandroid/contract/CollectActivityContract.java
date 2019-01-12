@@ -16,6 +16,8 @@ public interface CollectActivityContract {
         void getCollectArticles();
         void addCollectArticles(int page);
         void cancelCollect(int position, List<ArticleInCollectPage> articles);
+        void setCurrentActivity(String activityName);
+        String getCurrentActivity();
     }
     interface View extends IBaseView{
         void showCollectArticlesSucceed(List<ArticleInCollectPage> articles);
@@ -28,7 +30,7 @@ public interface CollectActivityContract {
         void showCancelCollectFailed(int position,List<ArticleInCollectPage> articles,String errorMsg);
 
         void subscribeLoginEvent();
-        void subscribeCancelCollectEvent(String activityName);
-        void subscribeCollectEvent(String activityName);
+        void subscribeCancelCollectEvent();
+        void subscribeCollectEvent();
     }
 }

@@ -57,6 +57,18 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getPresenter().setCurrentActivity(Constants.SEARCH_LIST_ACTIVITY);
+    }
+
+    @Override
+    protected void onPause() {
+        getPresenter().setCurrentActivity("");
+        super.onPause();
+    }
+
+    @Override
     public Context getViewContext() {
         return this;
     }
@@ -139,16 +151,16 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
     }
 
     @Override
-    public void subscribeCancelCollectEvent(String activityName) {
-        if (activityName.equals(Constants.SEARCH_LIST_ACTIVITY)) {
+    public void subscribeCancelCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.SEARCH_LIST_ACTIVITY)) {
             mHomeAdapter.getItem(clickPosition).setCollect(false);
             mHomeAdapter.notifyItemChanged(clickPosition);
         }
     }
 
     @Override
-    public void subscribeCollectEvent(String activityName) {
-        if (activityName.equals(Constants.SEARCH_LIST_ACTIVITY)) {
+    public void subscribeCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.SEARCH_LIST_ACTIVITY)) {
             mHomeAdapter.getItem(clickPosition).setCollect(true);
             mHomeAdapter.notifyItemChanged(clickPosition);
         }
@@ -204,7 +216,7 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 clickPosition = position;
-                ArticleDetailActivity.startArticleDetailActivity(SearchListActivity.this, Constants.SEARCH_LIST_ACTIVITY,
+                ArticleDetailActivity.startArticleDetailActivity(SearchListActivity.this,
                         mHomeAdapter.getItem(position).getId(), mHomeAdapter.getItem(position).getTitle(),
                         mHomeAdapter.getItem(position).getLink(), mHomeAdapter.getItem(position).isCollect());
             }
@@ -244,9 +256,11 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
     }
 
     private void refreshView() {
-        if (mHomeAdapter.getEmptyView().findViewById(R.id.tv_empty) != null) {
-            recyclerActivitySearchList.scrollToPosition(0);
-            smartActivitySearchList.autoRefresh();
+        if (getPresenter().getCurrentActivity().equals(Constants.SEARCH_LIST_ACTIVITY)) {
+            if (mHomeAdapter.getEmptyView().findViewById(R.id.tv_empty) != null) {
+                recyclerActivitySearchList.scrollToPosition(0);
+                smartActivitySearchList.autoRefresh();
+            }
         }
     }
 

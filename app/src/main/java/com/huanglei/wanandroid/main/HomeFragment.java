@@ -131,7 +131,7 @@ public class HomeFragment extends StateMVPBaseFragment<HomeFragmentContract.Pres
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mClickPosition = position;
-                ArticleDetailActivity.startArticleDetailActivity(getContext(), Constants.MAIN_ACTIVITY, ((Article) adapter.getItem(position)).getId(),
+                ArticleDetailActivity.startArticleDetailActivity(getContext(), ((Article) adapter.getItem(position)).getId(),
                         ((Article) adapter.getItem(position)).getTitle(), ((Article) adapter.getItem(position)).getLink(), ((Article) adapter.getItem(position)).isCollect());
             }
         });

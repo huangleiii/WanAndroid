@@ -28,8 +28,6 @@ public class LoginActivityPresenter extends RxMVPBasePresenter<LoginActivityCont
                 .subscribe(new Consumer<Account>() {
                     @Override
                     public void accept(Account account) throws Exception {
-                        SharedPreferencesHelper.getInstance().setUsername(account.getUsername());
-                        SharedPreferencesHelper.getInstance().setLoginStatus(true);
                         RxBus.getInstance().post(new LoginEvent());
                         if (isViewAttached())
                             getView().loginSucceed(account);
@@ -63,6 +61,13 @@ public class LoginActivityPresenter extends RxMVPBasePresenter<LoginActivityCont
                     }
                 }));
     }
+
+    @Override
+    public void setLoginStatus(boolean isLogin,String username) {
+        SharedPreferencesHelper.getInstance().setUsername(username);
+        SharedPreferencesHelper.getInstance().setLoginStatus(isLogin);
+    }
+
 
     @Override
     protected void registerEvent() {

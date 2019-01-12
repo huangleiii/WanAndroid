@@ -39,18 +39,15 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
     private String articleLink;
     private static final String ARTICLE_ID = "article id";
     private int articleId;
-    private static final String ACTIVITY_NAME = "activity name";
-    private String activityName;
     private static final String ARTICLE_CAN_COLLECT = "article can collect";
     private boolean articleCanCollect;
     private static final String ARTICLE_IS_COLLECTED = "article is collected";
     private boolean articleIsCollected;
     private WebView webView;
 
-    public static void startArticleDetailActivity(Context context, String activityName, int id, String title, String link, boolean isCollected) {
+    public static void startArticleDetailActivity(Context context, int id, String title, String link, boolean isCollected) {
         Intent intent = new Intent(context, ArticleDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(ACTIVITY_NAME, activityName);
         bundle.putBoolean(ARTICLE_CAN_COLLECT, true);
         bundle.putInt(ARTICLE_ID, id);
         bundle.putString(ARTICLE_TITLE, title);
@@ -163,7 +160,6 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
             articleTitle = bundle.getString(ARTICLE_TITLE);
             articleLink = bundle.getString(ARTICLE_LINK);
             articleId = bundle.getInt(ARTICLE_ID);
-            activityName = bundle.getString(ACTIVITY_NAME);
             articleCanCollect = bundle.getBoolean(ARTICLE_CAN_COLLECT);
             articleIsCollected = bundle.getBoolean(ARTICLE_IS_COLLECTED);
         }
@@ -235,11 +231,11 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
                 if (articleIsCollected) {
                     articleIsCollected=false;
                     supportInvalidateOptionsMenu();
-                    getPresenter().cancelCollect(activityName, articleId);
+                    getPresenter().cancelCollect( articleId);
                 } else {
                     articleIsCollected=true;
                     supportInvalidateOptionsMenu();
-                    getPresenter().collect(activityName, articleId);
+                    getPresenter().collect( articleId);
                 }
                 break;
             case R.id.share_detail_menu:

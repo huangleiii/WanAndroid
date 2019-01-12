@@ -20,7 +20,7 @@ import io.reactivex.functions.Consumer;
 public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDetailActivityContract.View> implements ArticleDetailActivityContract.Presenter {
 
     @Override
-    public void collect(final String activityName, int id) {
+    public void collect( int id) {
         addDisposable(HttpHelper.getInstance()
                 .collect(id)
                 .compose(RxUtils.noDataResponseTransformer())
@@ -31,7 +31,6 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                         if (isViewAttached()) {
                             getView().showCollectSucceed();
                             CollectEvent collectEvent = new CollectEvent();
-                            collectEvent.setActivityName(activityName);
                             RxBus.getInstance().post(collectEvent);
                         }
                     }
@@ -49,7 +48,7 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
     }
 
     @Override
-    public void cancelCollect(final String activityName, int id) {
+    public void cancelCollect(int id) {
         addDisposable(HttpHelper.getInstance()
                 .cancelCollect(id)
                 .compose(RxUtils.noDataResponseTransformer())
@@ -60,7 +59,6 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                         if (isViewAttached()) {
                             getView().showCancelCollectSucceed();
                             CancelCollectEvent cancelCollectEvent = new CancelCollectEvent();
-                            cancelCollectEvent.setActivityName(activityName);
                             RxBus.getInstance().post(cancelCollectEvent);
                         }
                     }

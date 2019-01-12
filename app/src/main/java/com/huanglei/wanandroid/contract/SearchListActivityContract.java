@@ -18,6 +18,8 @@ public interface SearchListActivityContract {
         void collect(int position, List<Article> articles);
 
         void cancelCollect(int position, List<Article> articles);
+        void setCurrentActivity(String activityName);
+        String getCurrentActivity();
 
     }
     interface View extends IBaseView{
@@ -34,7 +36,7 @@ public interface SearchListActivityContract {
         void showCancelCollectFailed(int position,List<Article> articles,String errorMsg);
 
         void subscribeLoginEvent();
-        void subscribeCancelCollectEvent(String activityName);
-        void subscribeCollectEvent(String activityName);
+        void subscribeCancelCollectEvent();
+        void subscribeCollectEvent();
     }
 }

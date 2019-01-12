@@ -117,15 +117,15 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
     }
 
     @Override
-    public void subscribeCancelCollectEvent(String activityName) {
-        if (activityName.equals(Constants.COLLECT_ACTIVITY)) {
+    public void subscribeCancelCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.COLLECT_ACTIVITY)) {
             mAdapter.remove(clickPosition);
         }
     }
 
     @Override
-    public void subscribeCollectEvent(String activityName) {
-        if (activityName.equals(Constants.COLLECT_ACTIVITY)) {
+    public void subscribeCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.COLLECT_ACTIVITY)) {
             mAdapter.replaceData(beforeArticleList);
         }
     }
@@ -164,7 +164,7 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
                 beforeArticleList.clear();
                 beforeArticleList.addAll(mAdapter.getData());
                 ArticleDetailActivity.startArticleDetailActivity(CollectActivity.this,
-                        Constants.COLLECT_ACTIVITY, mAdapter.getItem(position).getOriginId(),//注意是getOriginId()而非getId()
+                         mAdapter.getItem(position).getOriginId(),//注意是getOriginId()而非getId()
                         mAdapter.getItem(position).getTitle(), mAdapter.getItem(position).getLink(),
                         true);
             }
@@ -210,9 +210,11 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
     }
 
     private void refreshView() {
-        if (mAdapter.getEmptyView().findViewById(R.id.tv_empty) != null) {
-            recyclerActivityCollect.scrollToPosition(0);
-            smartActivityCollect.autoRefresh();
+        if(getPresenter().getCurrentActivity().equals(Constants.COLLECT_ACTIVITY)){
+            if (mAdapter.getEmptyView().findViewById(R.id.tv_empty) != null) {
+                recyclerActivityCollect.scrollToPosition(0);
+                smartActivityCollect.autoRefresh();
+            }
         }
     }
 
@@ -227,6 +229,18 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
             requestData();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPresenter().setCurrentActivity(Constants.COLLECT_ACTIVITY);
+    }
+    @Override
+    protected void onPause() {
+        getPresenter().setCurrentActivity("");
+        super.onPause();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

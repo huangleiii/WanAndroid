@@ -92,6 +92,8 @@ public abstract class MVPBaseFragment<T extends IBasePresenter> extends Fragment
 
     @Override
     public void onDestroyView() {
+        isDataLoaded=false;
+        isViewInitiated=false;
         if (mPresenter != null)
             mPresenter.detachView();
         mUnbinder.unbind();

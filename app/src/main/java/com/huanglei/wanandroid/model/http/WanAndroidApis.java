@@ -9,6 +9,7 @@ import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
 import com.huanglei.wanandroid.model.bean.NavigationArticleList;
+import com.huanglei.wanandroid.model.bean.Tab;
 
 import java.util.List;
 
@@ -68,4 +69,16 @@ public interface WanAndroidApis {
 
     @GET("navi/json")
     Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists();
+
+    @GET("project/tree/json")
+    Observable<BaseResponse<List<Tab>>> getProjectTrees();
+
+    @GET("project/list/{num}/json?cid={id}")
+    Observable<BaseResponse<ArticleList>> getProjectArticles(@Path("num") int num,@Path("id")int id);
+
+    @GET("wxarticle/chapters/json")
+    Observable<BaseResponse<List<Tab>>> getWxTrees();
+
+    @GET("wxarticle/list/{id}/{num}/json")
+    Observable<BaseResponse<ArticleList>> getWxArticles(@Path("num") int num,@Path("id")int id);
 }

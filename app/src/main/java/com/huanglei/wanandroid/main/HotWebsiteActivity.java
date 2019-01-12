@@ -1,15 +1,15 @@
 package com.huanglei.wanandroid.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huanglei.wanandroid.R;
-import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.HotWebsiteActivityContract;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
@@ -21,6 +21,7 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContract.Presenter> implements HotWebsiteActivityContract.View {
     //    @BindView(R.id.toolbar_activity_hot_website)
@@ -31,6 +32,12 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
     ImageView imgCloseActivityHotWebsite;
     @BindView(R.id.flowlayout_activity_hot_website)
     TagFlowLayout flowlayoutActivityHotWebsite;
+    @BindView(R.id.loading)
+    RelativeLayout loading;
+    @BindView(R.id.retry_error)
+    RelativeLayout retryError;
+    @BindView(R.id.normal)
+    NestedScrollView normal;
     private List<HotWebsite> mHotWebsites;
 
     @Override
@@ -57,13 +64,36 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
         });
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         setFinishOnTouchOutside(false);
+        retryError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoading();
+                getPresenter().getHotWebsiteList();
+            }
+        });
     }
 
     @Override
     protected void requestData() {
+        showLoading();
         getPresenter().getHotWebsiteList();
     }
+    private void showLoading(){
+        loading.setVisibility(View.VISIBLE);
+        retryError.setVisibility(View.GONE);
+        normal.setVisibility(View.GONE);
+    }
+    private void showError(){
+        loading.setVisibility(View.GONE);
+        retryError.setVisibility(View.VISIBLE);
+        normal.setVisibility(View.GONE);
+    }
+    private void showNormal(){
+        loading.setVisibility(View.GONE);
+        retryError.setVisibility(View.GONE);
+        normal.setVisibility(View.VISIBLE);
 
+    }
 
     @Override
     public Context getViewContext() {
@@ -72,6 +102,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
 
     @Override
     public void showHotWebsiteListSucceed(List<HotWebsite> hotWebsites) {
+        showNormal();
         mHotWebsites = hotWebsites;
         flowlayoutActivityHotWebsite.setAdapter(new TagAdapter<HotWebsite>(hotWebsites) {
             @Override
@@ -85,7 +116,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 ArticleDetailActivity.startArticleDetailActivity(HotWebsiteActivity.this,
-                        mHotWebsites.get(position).getName(),mHotWebsites.get(position).getLink());
+                        mHotWebsites.get(position).getName(), mHotWebsites.get(position).getLink());
                 finish();
                 return true;
             }
@@ -106,7 +137,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
 
     @Override
     public void showHotWebsiteListFailed(String errorMsg) {
-        CommonUtils.showToastMessage(this, errorMsg);
+        showError();
     }
 
     @Override
@@ -117,6 +148,7 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(0,0);//将原生的退场动画去除掉，这样才不会对style中设置的动画产生干扰
+        overridePendingTransition(0, 0);//将原生的退场动画去除掉，这样才不会对style中设置的动画产生干扰
     }
+
 }

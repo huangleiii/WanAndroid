@@ -6,7 +6,6 @@ import com.huanglei.wanandroid.event.CancelCollectEvent;
 import com.huanglei.wanandroid.event.CollectEvent;
 import com.huanglei.wanandroid.event.LoginEvent;
 import com.huanglei.wanandroid.event.LoginExpiredEvent;
-import com.huanglei.wanandroid.event.LogoutEvent;
 import com.huanglei.wanandroid.event.RxBus;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.http.HttpHelper;
@@ -40,9 +39,6 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                 .subscribe(new Consumer() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        SharedPreferencesHelper.getInstance().setUsername("");
-                        SharedPreferencesHelper.getInstance().setLoginStatus(false);
-                        RxBus.getInstance().post(new LogoutEvent());
                         if (isViewAttached())
                             getView().showLogoutSucceed(o);
                     }
@@ -53,6 +49,22 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                             getView().showLogoutFailed(errorMessage);
                     }
                 }));
+    }
+
+    @Override
+    public void setLoginStatus(boolean isLogin, String username) {
+        SharedPreferencesHelper.getInstance().setUsername(username);
+        SharedPreferencesHelper.getInstance().setLoginStatus(isLogin);
+    }
+
+    @Override
+    public void setCurrentActivity(String activityName) {
+        SharedPreferencesHelper.getInstance().setCurrentActivity(activityName);
+    }
+
+    @Override
+    public String getCurrentActivity() {
+        return SharedPreferencesHelper.getInstance().getCurrentActivity();
     }
 
     @Override
@@ -80,7 +92,7 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                     @Override
                     public void accept(CancelCollectEvent cancelCollectEvent) throws Exception {
                         if (isViewAttached()) {
-                            getView().subscribeCancelCollectEvent(cancelCollectEvent.getActivityName());
+                            getView().subscribeCancelCollectEvent();
                         }
                     }
                 }));
@@ -90,7 +102,7 @@ public class MainActivityPresenter extends RxMVPBasePresenter<MainActivityContra
                     @Override
                     public void accept(CollectEvent collectEvent) throws Exception {
                         if (isViewAttached()) {
-                            getView().subscribeCollectEvent(collectEvent.getActivityName());
+                            getView().subscribeCollectEvent();
                         }
                     }
                 }));

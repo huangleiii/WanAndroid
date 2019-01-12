@@ -12,6 +12,7 @@ import com.huanglei.wanandroid.model.bean.ArticleInCollectPageList;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.http.HttpHelper;
+import com.huanglei.wanandroid.model.sharedpreferences.SharedPreferencesHelper;
 import com.huanglei.wanandroid.utils.ErrorConsumer;
 import com.huanglei.wanandroid.utils.RxUtils;
 
@@ -100,6 +101,16 @@ public class CollectActivityPresenter extends RxMVPBasePresenter<CollectActivity
     }
 
     @Override
+    public void setCurrentActivity(String activityName) {
+        SharedPreferencesHelper.getInstance().setCurrentActivity(activityName);
+    }
+
+    @Override
+    public String getCurrentActivity() {
+        return SharedPreferencesHelper.getInstance().getCurrentActivity();
+    }
+
+    @Override
     protected void registerEvent() {
         addDisposable(RxBus.getInstance()
                 .toObservable(LoginEvent.class)
@@ -117,7 +128,7 @@ public class CollectActivityPresenter extends RxMVPBasePresenter<CollectActivity
                     @Override
                     public void accept(CancelCollectEvent cancelCollectEvent) throws Exception {
                         if (isViewAttached()) {
-                            getView().subscribeCancelCollectEvent(cancelCollectEvent.getActivityName());
+                            getView().subscribeCancelCollectEvent();
                         }
                     }
                 }));
@@ -127,7 +138,7 @@ public class CollectActivityPresenter extends RxMVPBasePresenter<CollectActivity
                     @Override
                     public void accept(CollectEvent collectEvent) throws Exception {
                         if (isViewAttached()) {
-                            getView().subscribeCollectEvent(collectEvent.getActivityName());
+                            getView().subscribeCollectEvent();
                         }
                     }
                 }));

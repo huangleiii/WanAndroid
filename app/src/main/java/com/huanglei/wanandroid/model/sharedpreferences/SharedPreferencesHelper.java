@@ -42,5 +42,11 @@ public class SharedPreferencesHelper {
     public boolean getLoginStatus() {
         return mSharedPreference.getBoolean(Constants.LOGIN_STATUS,false);
     }
+    public void setCurrentActivity(String activityName){
+        mSharedPreference.edit().putString(Constants.ACTIVITY_NAME,activityName).apply();
+    }
+    public String getCurrentActivity(){
+        return mSharedPreference.getString(Constants.ACTIVITY_NAME,"");
+    }
 
 }

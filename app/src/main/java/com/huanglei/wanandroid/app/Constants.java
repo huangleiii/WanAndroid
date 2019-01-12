@@ -13,6 +13,7 @@ public class Constants {
 
     public static final String HISTORY_SEARCH_KEYWORDS_DATABASE_NAME="history search keywords database";
 
+    public static final String ACTIVITY_NAME="activity name";
     public static final String MAIN_ACTIVITY="main activity";
     public static final String SEARCH_LIST_ACTIVITY="search list activity";
     public static final String COLLECT_ACTIVITY="collect activity";

@@ -102,7 +102,7 @@ public class NavigationFragment extends StateMVPBaseFragment<NavigationFragmentC
     public void jumpToTop() {
         clickTab(0);
         recyclerContentFragmentNavigation.smoothScrollToPosition(0);
-        recyclerTabFragmentNavigation.smoothScrollToPosition(0);
+        recyclerTabFragmentNavigation.scrollToPosition(0);
     }
     @Override
     protected int getLayoutId() {
@@ -124,6 +124,7 @@ public class NavigationFragment extends StateMVPBaseFragment<NavigationFragmentC
         contentLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         recyclerContentFragmentNavigation.setLayoutManager(contentLayoutManager);
         recyclerTabFragmentNavigation.setLayoutManager(tabLayoutManager);
+        recyclerTabFragmentNavigation.setNestedScrollingEnabled(false);
     }
 
     @Override

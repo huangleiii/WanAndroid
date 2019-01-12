@@ -65,7 +65,20 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     private String mCurrentFragmentTag;
     private HomeFragment mHomeFragment;
     private NavigationFragment mNavigationFragment;
+    private WeixinFragment mWeixinFragment;
     private MyProgressDialog myProgressDialog;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPresenter().setCurrentActivity(Constants.MAIN_ACTIVITY);
+    }
+
+    @Override
+    protected void onPause() {
+        getPresenter().setCurrentActivity("");
+        super.onPause();
+    }
 
     @Override
     protected int getLayoutId() {
@@ -87,17 +100,17 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
         mHeaderLinearLayout = view.findViewById(R.id.lin_header_navigation);
         mHeaderCircleImageView = view.findViewById(R.id.circle_header_navigation);
         mHeaderTextView = view.findViewById(R.id.tv_header_navigation);
+        mFragmentManager = getSupportFragmentManager();
         bottomActivityMain.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                mFragmentManager = getSupportFragmentManager();
                 mFragmentTransaction = mFragmentManager.beginTransaction();
+                if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
+                    Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
+                    mFragmentTransaction.hide(currentFragment);
+                }
                 switch (menuItem.getItemId()) {
                     case R.id.home_bottom_menu:
-                        if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
-                            Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-                            mFragmentTransaction.hide(currentFragment);
-                        }
                         if (mFragmentManager.findFragmentByTag(TAG_PAGE_HOME) == null) {
                             mHomeFragment = HomeFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mHomeFragment, TAG_PAGE_HOME);
@@ -111,12 +124,17 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                     case R.id.knowledge_bottom_menu:
                         break;
                     case R.id.weixin_bottom_menu:
+                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN) == null) {
+                            mWeixinFragment = WeixinFragment.newInstance();
+                            mFragmentTransaction.add(R.id.content_activity_main, mWeixinFragment, TAG_PAGE_WEIXIN);
+                        } else {
+                            mWeixinFragment = (WeixinFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN);
+                        }
+                        mFragmentTransaction.show(mWeixinFragment);
+                        mCurrentFragmentTag = TAG_PAGE_WEIXIN;
+                        tvTitleActivityMain.setText(R.string.title_page_weixin);
                         break;
                     case R.id.navigation_bottom_menu:
-                        if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
-                            Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-                            mFragmentTransaction.hide(currentFragment);
-                        }
                         if (mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION) == null) {
                             mNavigationFragment = NavigationFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mNavigationFragment, TAG_PAGE_NAVIGATION);
@@ -236,8 +254,10 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
             if (fragment != null) {
                 if (fragment instanceof HomeFragment) {
                     ((HomeFragment) fragment).jumpToTop();
-                }else if(fragment instanceof NavigationFragment){
+                } else if (fragment instanceof NavigationFragment) {
                     ((NavigationFragment) fragment).jumpToTop();
+                } else if (fragment instanceof WeixinFragment) {
+                    ((WeixinFragment) fragment).jumpToTop();
                 }
             }
         }
@@ -256,11 +276,12 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
 
     @Override
     public void showLogoutSucceed(Object o) {
+        getPresenter().setLoginStatus(false, "");
         myProgressDialog.dismiss();
         CommonUtils.showToastMessage(this, "退出登录成功");
         showUnLogin();
-        refreshCurrentFragment();
         startActivity(new Intent(this, LoginActivity.class));
+        refreshCurrentFragment();
     }
 
     @Override
@@ -272,17 +293,21 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     @Override
     public void subscribeLoginEvent() {
         showLogin(getPresenter().getUsername());
-        refreshCurrentFragment();
+        if (getPresenter().getCurrentActivity().equals(Constants.MAIN_ACTIVITY)) {
+            refreshCurrentFragment();
+        }
     }
 
     @Override
-    public void subscribeCancelCollectEvent(String activityName) {
-        if (activityName.equals(Constants.MAIN_ACTIVITY)) {
+    public void subscribeCancelCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.MAIN_ACTIVITY)) {
             if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
                 Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
                 if (fragment != null) {
                     if (fragment instanceof HomeFragment) {
                         ((HomeFragment) fragment).updateCollectState(false);
+                    } else if (fragment instanceof WeixinFragment) {
+                        ((WeixinFragment) fragment).updateCollectState(false);
                     }
                 }
             }
@@ -290,13 +315,15 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     }
 
     @Override
-    public void subscribeCollectEvent(String activityName) {
-        if (activityName.equals(Constants.MAIN_ACTIVITY)) {
+    public void subscribeCollectEvent() {
+        if (getPresenter().getCurrentActivity().equals(Constants.MAIN_ACTIVITY)) {
             if (!TextUtils.isEmpty(mCurrentFragmentTag)) {
                 Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
                 if (fragment != null) {
                     if (fragment instanceof HomeFragment) {
                         ((HomeFragment) fragment).updateCollectState(true);
+                    } else if (fragment instanceof WeixinFragment) {
+                        ((WeixinFragment) fragment).updateCollectState(true);
                     }
                 }
             }
@@ -325,6 +352,8 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
             if (fragment != null) {
                 if (fragment instanceof HomeFragment) {
                     ((HomeFragment) fragment).refreshView();
+                } else if (fragment instanceof WeixinFragment) {
+                    ((WeixinFragment) fragment).refreshView();
                 }
             }
         }

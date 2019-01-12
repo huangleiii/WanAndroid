@@ -20,8 +20,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="16sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/img_close_activity_hot_website"
@@ -35,8 +35,10 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey"/>
+            android:background="@color/grey" />
+
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
@@ -48,6 +50,53 @@
                 android:layout_height="match_parent"
                 android:padding="5dp"></com.zhy.view.flowlayout.TagFlowLayout>
         </android.support.v4.widget.NestedScrollView>
+
+        <RelativeLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="正在加载，请稍候……"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/retry_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="加载失败，请点击屏幕重新加载"
+                android:textSize="15sp"
+                android:textColor="@color/red"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <!--<android.support.design.widget.CoordinatorLayout-->

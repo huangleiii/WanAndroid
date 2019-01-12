@@ -11,5 +11,6 @@
         android:layout_centerInParent="true"
         android:text="加载失败，请点击屏幕重新加载"
         android:textSize="15sp"
-        android:paddingBottom="48dp"/>
+        android:paddingBottom="48dp"
+        android:textColor="@color/red"/>
 </RelativeLayout>

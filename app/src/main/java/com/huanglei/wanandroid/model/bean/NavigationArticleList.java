@@ -7,7 +7,7 @@ import java.util.List;
  * Created by 黄垒 on 2019/1/10.
  */
 
-public class NavigationArticleList implements Serializable{
+public class NavigationArticleList{
     private int cid;
     private String name;
     private List<Article> articles;

@@ -45,7 +45,7 @@ public class NavigationContentAdapter extends BaseQuickAdapter<NavigationArticle
         tagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                ArticleDetailActivity.startArticleDetailActivity(context, Constants.MAIN_ACTIVITY,articles.get(position).getId(),
+                ArticleDetailActivity.startArticleDetailActivity(context, articles.get(position).getId(),
                         articles.get(position).getTitle(),articles.get(position).getLink(),articles.get(position).isCollect());
                 return true;
             }

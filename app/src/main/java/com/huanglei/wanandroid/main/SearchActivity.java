@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.CollapsibleActionView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +12,22 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.SearchActivityContract;
-import com.huanglei.wanandroid.model.bean.Article;
 import com.huanglei.wanandroid.model.bean.HotKey;
-import com.huanglei.wanandroid.model.bean.Tag;
 import com.huanglei.wanandroid.model.db.HistoryKeyword;
+import com.huanglei.wanandroid.utils.CommonUtils;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +47,10 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
     TextView tvClearActivitySearch;
     @BindView(R.id.recycler_history_activity_search)
     RecyclerView recyclerHistoryActivitySearch;
+    @BindView(R.id.loading)
+    RelativeLayout loading;
+    @BindView(R.id.retry_error)
+    RelativeLayout retryError;
     private HistoryKeysAdapter historyKeysAdapter;
 
     @Override
@@ -58,10 +60,11 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
 
     @Override
     public void showHotSearchKeywordsSucceed(final List<HotKey> keys) {
+        showNormal();
         flowlayoutActivitySearch.setAdapter(new TagAdapter<HotKey>(keys) {
             @Override
             public View getView(FlowLayout parent, int position, HotKey key) {
-                TextView textView=(TextView)LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_flowlayout_hotkey,parent,false);
+                TextView textView = (TextView) LayoutInflater.from(SearchActivity.this).inflate(R.layout.item_flowlayout_hotkey, parent, false);
                 textView.setText(key.getName());
                 return textView;
             }
@@ -77,7 +80,7 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
 
     @Override
     public void showHotSearchKeywordsFailed(String errorMs) {
-
+        showError();
     }
 
     @Override
@@ -173,9 +176,9 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
             }
         });
         historyKeysAdapter.bindToRecyclerView(recyclerHistoryActivitySearch);
-        recyclerHistoryActivitySearch.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        recyclerHistoryActivitySearch.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         historyKeysAdapter.setEmptyView(R.layout.empty);
-        ((TextView)(historyKeysAdapter.getEmptyView().findViewById(R.id.tv_empty))).setText("搜索历史为空");
+        ((TextView) (historyKeysAdapter.getEmptyView().findViewById(R.id.tv_empty))).setText("搜索历史为空");
         tvClearActivitySearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,19 +188,41 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
         edSearchActivitySearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search(v.getText().toString());
                     return true;
                 }
                 return false;
             }
         });
+        retryError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoading();
+                getPresenter().getHotSearchKeywords();
+            }
+        });
+    }
+    private void showNormal(){
+        flowlayoutActivitySearch.setVisibility(View.VISIBLE);
+        retryError.setVisibility(View.GONE);
+        loading.setVisibility(View.GONE);
+    }
+    private void showError(){
+        flowlayoutActivitySearch.setVisibility(View.GONE);
+        retryError.setVisibility(View.VISIBLE);
+        loading.setVisibility(View.GONE);
+    }
+    private void showLoading(){
+        flowlayoutActivitySearch.setVisibility(View.GONE);
+        retryError.setVisibility(View.GONE);
+        loading.setVisibility(View.VISIBLE);
     }
 
     private void search(String data) {
         getPresenter().addHistorySearchKeyword(data);
         finish();
-        SearchListActivity.startSearchListActivity(this,data);
+        SearchListActivity.startSearchListActivity(this, data);
     }
 
     @Override
@@ -215,6 +240,7 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(0,0);//将原生的退场动画去除掉，这样才不会对style中设置的动画产生干扰
+        overridePendingTransition(0, 0);//将原生的退场动画去除掉，这样才不会对style中设置的动画产生干扰
     }
+
 }
