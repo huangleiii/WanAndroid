@@ -100,18 +100,13 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
         bottomActivityMain.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                hideAllFragments();
                 mFragmentTransaction = mFragmentManager.beginTransaction();
-                if (!TextUtils.isEmpty(mCurrentFragmentTag) && mFragmentManager.findFragmentByTag(mCurrentFragmentTag) != null) {
-                    Fragment currentFragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
-                    mFragmentTransaction.hide(currentFragment);
-                }
                 switch (menuItem.getItemId()) {
                     case R.id.home_bottom_menu:
-                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_HOME) == null) {
+                        if (mHomeFragment== null) {
                             mHomeFragment = HomeFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mHomeFragment, TAG_PAGE_HOME);
-                        } else {
-                            mHomeFragment = (HomeFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_HOME);
                         }
                         mFragmentTransaction.show(mHomeFragment);
                         mCurrentFragmentTag = TAG_PAGE_HOME;
@@ -120,33 +115,27 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                     case R.id.knowledge_bottom_menu:
                         break;
                     case R.id.weixin_bottom_menu:
-                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN) == null) {
+                        if (mWeixinFragment== null) {
                             mWeixinFragment = WeixinFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mWeixinFragment, TAG_PAGE_WEIXIN);
-                        } else {
-                            mWeixinFragment = (WeixinFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN);
                         }
                         mFragmentTransaction.show(mWeixinFragment);
                         mCurrentFragmentTag = TAG_PAGE_WEIXIN;
                         tvTitleActivityMain.setText(R.string.title_page_weixin);
                         break;
                     case R.id.navigation_bottom_menu:
-                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION) == null) {
+                        if (mNavigationFragment == null) {
                             mNavigationFragment = NavigationFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mNavigationFragment, TAG_PAGE_NAVIGATION);
-                        } else {
-                            mNavigationFragment = (NavigationFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION);
                         }
                         mFragmentTransaction.show(mNavigationFragment);
                         mCurrentFragmentTag = TAG_PAGE_NAVIGATION;
                         tvTitleActivityMain.setText(R.string.title_page_navigation);
                         break;
                     case R.id.project_bottom_menu:
-                        if (mFragmentManager.findFragmentByTag(TAG_PAGE_PROJECT) == null) {
+                        if (mProjectFragment == null) {
                             mProjectFragment = ProjectFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mProjectFragment, TAG_PAGE_PROJECT);
-                        } else {
-                            mProjectFragment = (ProjectFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_PROJECT);
                         }
                         mFragmentTransaction.show(mProjectFragment);
                         mCurrentFragmentTag = TAG_PAGE_PROJECT;
@@ -220,6 +209,26 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                 jumpToTop();
             }
         });
+    }
+    private void hideAllFragments(){
+        mFragmentTransaction=mFragmentManager.beginTransaction();
+        mHomeFragment= (HomeFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_HOME);
+        if(mHomeFragment!=null){
+            mFragmentTransaction.hide(mHomeFragment);
+        }
+        mWeixinFragment=(WeixinFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN);
+        if(mWeixinFragment!=null){
+            mFragmentTransaction.hide(mWeixinFragment);
+        }
+        mProjectFragment=(ProjectFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_PROJECT);
+        if(mProjectFragment!=null){
+            mFragmentTransaction.hide(mProjectFragment);
+        }
+        mNavigationFragment=(NavigationFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION);
+        if(mNavigationFragment!=null){
+            mFragmentTransaction.hide(mNavigationFragment);
+        }
+        mFragmentTransaction.commitAllowingStateLoss();
     }
 
     @Override
