@@ -37,7 +37,7 @@ private Context mContext;
                         .setText(R.id.tv_type_item_fragment_home,(!TextUtils.isEmpty(item.getSuperChapterName()))&&(!TextUtils.isEmpty(item.getChapterName()))?
                                 item.getSuperChapterName()+"/"+item.getChapterName():"")
                         .setImageResource(R.id.img_collect_item_fragment_home,
-                                item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_grey_24dp)
+                                item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_light_grey_24dp)
                         .setGone(R.id.tv_tag_new_item_fragment_home,item.isFresh())
                         .setGone(R.id.tv_tag_weixin_item_fragment_home,item.getSuperChapterName().equals("公众号"))
                         .addOnClickListener(R.id.img_collect_item_fragment_home)
@@ -50,7 +50,7 @@ private Context mContext;
                         .setText(R.id.tv_type_item_fragment_project,(!TextUtils.isEmpty(item.getSuperChapterName()))&&(!TextUtils.isEmpty(item.getChapterName()))?
                                 item.getSuperChapterName()+"/"+item.getChapterName():"")
                         .setImageResource(R.id.img_collect_item_fragment_project,
-                                item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_grey_24dp)
+                                item.isCollect()?R.drawable.ic_favorite_red_24dp:R.drawable.ic_favorite_light_grey_24dp)
                         .setGone(R.id.tv_tag_new_item_fragment_project,item.isFresh())
 //                        .setGone(R.id.tv_tag_project_item_fragment_project,item.getSuperChapterName().equals("开源项目主Tab"))
                         .addOnClickListener(R.id.img_collect_item_fragment_project)

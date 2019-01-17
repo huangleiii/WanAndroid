@@ -123,7 +123,7 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
             LoginActivity.startLoginActivity(this,Constants.SEARCH_LIST_ACTIVITY);
         mHomeAdapter.getItem(position).setCollect(false);
         mHomeAdapter.notifyItemChanged(position);
-        CommonUtils.showToastMessage(this, "收藏失败");
+        CommonUtils.showToastMessage(this, errorMsg);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
             LoginActivity.startLoginActivity(this,Constants.SEARCH_LIST_ACTIVITY);
         mHomeAdapter.getItem(position).setCollect(true);
         mHomeAdapter.notifyItemChanged(position);
-        CommonUtils.showToastMessage(this, "取消收藏失败");
+        CommonUtils.showToastMessage(this, errorMsg);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
     }
 
     @Override
-    protected void initToolbar() {
+    protected void initView() {
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
@@ -187,10 +187,6 @@ public class SearchListActivity extends MVPBaseActivity<SearchListActivityContra
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         tvTitleActivitySearchList.setText(key);
-    }
-
-    @Override
-    protected void initView() {
         mHomeAdapter = new HomeAdapter(this, new ArrayList<Article>());
         mHomeAdapter.bindToRecyclerView(recyclerActivitySearchList);
         recyclerActivitySearchList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

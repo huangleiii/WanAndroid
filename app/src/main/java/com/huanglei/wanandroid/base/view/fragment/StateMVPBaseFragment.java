@@ -37,7 +37,7 @@ public abstract class StateMVPBaseFragment<T extends IBasePresenter> extends MVP
         mNormalView = view.findViewById(R.id.normal);
         if (mNormalView == null) {
             throw new IllegalStateException(
-                    "The rootView must contain a View named 'mNormalView'.");
+                    "The rootView must contain a View with the id R.id.normal.");
         }
         mLoadingView=getLayoutInflater().inflate(R.layout.loading, (ViewGroup) view,false);
         ((ViewGroup)view).addView(mLoadingView);

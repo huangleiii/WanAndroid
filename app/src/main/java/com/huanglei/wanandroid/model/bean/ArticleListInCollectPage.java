@@ -6,7 +6,7 @@ import java.util.List;
  * Created by 黄垒 on 2019/1/7.
  */
 
-public class ArticleInCollectPageList {
+public class ArticleListInCollectPage {
     private int curPage;
     private List<ArticleInCollectPage> datas;
     private  int offset;

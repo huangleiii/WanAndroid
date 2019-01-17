@@ -16,6 +16,7 @@ public interface CollectActivityContract {
         void getCollectArticles();
         void addCollectArticles(int page);
         void cancelCollect(int position, List<ArticleInCollectPage> articles);
+        void collectOutsideArticle(String title,String author,String link);
     }
     interface View extends IBaseView{
         void showCollectArticlesSucceed(List<ArticleInCollectPage> articles);
@@ -26,6 +27,9 @@ public interface CollectActivityContract {
 
         void showCancelCollectSucceed(int position,List<ArticleInCollectPage> articles);
         void showCancelCollectFailed(int position,List<ArticleInCollectPage> articles,boolean isLoginExpired,String errorMsg);
+
+        void showCollectOutsideArticleSucceed(String title,String author,String link);
+        void showCollectOutsideArticleFailed(boolean isLoginExpired,String errorMsg);
 
         void subscribeLoginEvent(String activityName);
         void subscribeCancelCollectEvent(String activityName);

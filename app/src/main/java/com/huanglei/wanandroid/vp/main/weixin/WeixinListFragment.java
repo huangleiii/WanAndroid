@@ -61,12 +61,14 @@ public class WeixinListFragment extends StateMVPBaseFragment<WeixinListFragmentC
             mHomeAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
                 @Override
                 public void onLoadMoreRequested() {
+                    if (id > 0)
                     getPresenter().addWxArticles(page, id);
                 }
             }, recyclerFragmentWeixinList);
             normal.setOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                    if (id > 0)
                     getPresenter().getWxArticles(id);
                 }
             });
@@ -140,7 +142,7 @@ public class WeixinListFragment extends StateMVPBaseFragment<WeixinListFragmentC
             LoginActivity.startLoginActivity(getContext(),Constants.MAIN_ACTIVITY);
         mHomeAdapter.getItem(position).setCollect(false);
         mHomeAdapter.notifyItemChanged(position);
-        CommonUtils.showToastMessage(getActivity(), "收藏失败");
+        CommonUtils.showToastMessage(getActivity(), errorMsg);
     }
 
     @Override
@@ -155,7 +157,7 @@ public class WeixinListFragment extends StateMVPBaseFragment<WeixinListFragmentC
             LoginActivity.startLoginActivity(getContext(),Constants.MAIN_ACTIVITY);
         mHomeAdapter.getItem(position).setCollect(true);
         mHomeAdapter.notifyItemChanged(position);
-        CommonUtils.showToastMessage(getActivity(), "取消收藏失败");
+        CommonUtils.showToastMessage(getActivity(), errorMsg);
 
     }
 

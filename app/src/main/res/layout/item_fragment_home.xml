@@ -11,7 +11,7 @@
         android:layout_width="25dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_favorite_grey_24dp"
+        android:src="@drawable/ic_favorite_light_grey_24dp"
         android:clickable="true"/>
     <TextView
         android:id="@+id/tv_tag_new_item_fragment_home"

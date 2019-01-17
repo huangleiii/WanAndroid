@@ -8,12 +8,13 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.app.WanAndroidApplication;
 import com.huanglei.wanandroid.model.bean.Account;
-import com.huanglei.wanandroid.model.bean.ArticleInCollectPageList;
+import com.huanglei.wanandroid.model.bean.ArticleListInCollectPage;
 import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
+import com.huanglei.wanandroid.model.bean.KnowledgeTabList;
 import com.huanglei.wanandroid.model.bean.NavigationArticleList;
 import com.huanglei.wanandroid.model.bean.Tab;
 import com.huanglei.wanandroid.utils.CommonUtils;
@@ -172,10 +173,10 @@ public class HttpHelper {
     public Observable<BaseResponse<List<HotKey>>> getSearchHotKeys(){
         return mWanAndroidApis.getSearchHotKeys();
     }
-    public Observable<BaseResponse<Object>> cancelCollectInCollectPage(int id){
-        return mWanAndroidApis.cancelCollectInCollectPage(id,-1);
+    public Observable<BaseResponse<Object>> cancelCollectInCollectPage(int id,int originId){
+        return mWanAndroidApis.cancelCollectInCollectPage(id,originId);
     }
-    public Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(int num){
+    public Observable<BaseResponse<ArticleListInCollectPage>> getCollectArticles(int num){
         return mWanAndroidApis.getCollectArticles(num);
     }
     public Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists(){
@@ -192,6 +193,15 @@ public class HttpHelper {
     }
     public Observable<BaseResponse<ArticleList>> getWxArticles(int num,int id){
         return mWanAndroidApis.getWxArticles(num,id);
+    }
+    public Observable<BaseResponse<List<KnowledgeTabList>>> getKnowledgeTabLists(){
+        return mWanAndroidApis.getKnowledgeTabLists();
+    }
+    public Observable<BaseResponse<ArticleList>> getKnowledgeArticleList(int num,int id){
+        return mWanAndroidApis.getKnowledgeArticleList(num,id);
+    }
+    public Observable<BaseResponse<Object>> collectOutsideArticle(String title,String author,String link){
+        return mWanAndroidApis.collectOutsideArticle(title,author,link);
     }
 
 }

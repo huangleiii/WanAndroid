@@ -5,6 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +19,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +31,10 @@ import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.MainActivityContract;
+import com.huanglei.wanandroid.vp.AboutUsActivity;
+import com.huanglei.wanandroid.vp.setting.SettingActivity;
 import com.huanglei.wanandroid.vp.login.LoginActivity;
+import com.huanglei.wanandroid.vp.main.knowledge.KnowledgeTabListsFragment;
 import com.huanglei.wanandroid.vp.main.navigation.NavigationFragment;
 import com.huanglei.wanandroid.vp.main.project.ProjectFragment;
 import com.huanglei.wanandroid.vp.search.SearchActivity;
@@ -36,6 +44,7 @@ import com.huanglei.wanandroid.vp.hotwebsite.HotWebsiteActivity;
 import com.huanglei.wanandroid.vp.main.home.HomeFragment;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.huanglei.wanandroid.widget.MyProgressDialog;
+
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,7 +56,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     public static final String TAG_PAGE_NAVIGATION = "navigation";
     public static final String TAG_PAGE_PROJECT = "project";
 
-    private static final int LOG_OUT = 4;
+    private static final int LOG_OUT = 3;
 
     @BindView(R.id.toolbar_activity_main)
     Toolbar toolbarActivityMain;
@@ -73,8 +82,44 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     private NavigationFragment mNavigationFragment;
     private WeixinFragment mWeixinFragment;
     private ProjectFragment mProjectFragment;
+    private KnowledgeTabListsFragment mKnowledgeTabListsFragment;
     private MyProgressDialog myProgressDialog;
+    private boolean canExit = false;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    canExit = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (drawerLayoutActivityMain.isDrawerOpen(navigationActivityMain)) {
+                drawerLayoutActivityMain.closeDrawer(navigationActivityMain);
+            } else {
+                exit();
+            }
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void exit() {
+        if (canExit) {
+            finish();
+        } else {
+            canExit = true;
+            handler.sendEmptyMessageDelayed(0, 2000);
+            CommonUtils.showToastMessage(this, "再按一次退出程序");
+        }
+    }
 
     @Override
     protected int getLayoutId() {
@@ -82,16 +127,15 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
     }
 
     @Override
-    protected void initToolbar() {
+    protected void initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         setSupportActionBar(toolbarActivityMain);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-    }
-
-    @Override
-    protected void initView() {
-        myProgressDialog = new MyProgressDialog(this);
+        myProgressDialog = new MyProgressDialog(MainActivity.this);
         View view = navigationActivityMain.getHeaderView(0);
         mHeaderLinearLayout = view.findViewById(R.id.lin_header_navigation);
         mHeaderCircleImageView = view.findViewById(R.id.circle_header_navigation);
@@ -104,7 +148,7 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                 mFragmentTransaction = mFragmentManager.beginTransaction();
                 switch (menuItem.getItemId()) {
                     case R.id.home_bottom_menu:
-                        if (mHomeFragment== null) {
+                        if (mHomeFragment == null) {
                             mHomeFragment = HomeFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mHomeFragment, TAG_PAGE_HOME);
                         }
@@ -113,9 +157,16 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                         tvTitleActivityMain.setText(R.string.title_page_home);
                         break;
                     case R.id.knowledge_bottom_menu:
+                        if (mKnowledgeTabListsFragment == null) {
+                            mKnowledgeTabListsFragment = KnowledgeTabListsFragment.newInstance();
+                            mFragmentTransaction.add(R.id.content_activity_main, mKnowledgeTabListsFragment, TAG_PAGE_KNOWLEDGE);
+                        }
+                        mFragmentTransaction.show(mKnowledgeTabListsFragment);
+                        mCurrentFragmentTag = TAG_PAGE_KNOWLEDGE;
+                        tvTitleActivityMain.setText(R.string.title_page_knowledge);
                         break;
                     case R.id.weixin_bottom_menu:
-                        if (mWeixinFragment== null) {
+                        if (mWeixinFragment == null) {
                             mWeixinFragment = WeixinFragment.newInstance();
                             mFragmentTransaction.add(R.id.content_activity_main, mWeixinFragment, TAG_PAGE_WEIXIN);
                         }
@@ -160,21 +211,34 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                             CommonUtils.showToastMessage(MainActivity.this, "请先登录");
                         }
                         break;
-                    case R.id.todo_navigation_menu:
-                        break;
                     case R.id.about_navigation_menu:
+                        startActivity(new Intent(MainActivity.this, AboutUsActivity.class));
                         break;
                     case R.id.set_navigation_menu:
+                        startActivity(new Intent(MainActivity.this, SettingActivity.class));
                         break;
                     case R.id.logout_navigation_menu:
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setMessage("确定退出登录？")
+                        AlertDialog alertDialog = builder.setMessage("确定退出登录？")
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        myProgressDialog.setText("正在退出登录，请稍候……");
-                                        getPresenter().logout();
+                                        //退出登录是GET请求，如果没有网会读取缓存而使得“退出登录成功”，
+                                        //但并不会修改cookie，所以连网后仍可以使用cookie保存的登录信息进行收藏等操作。
+                                        //因此应让其未连网时反馈“退出登录失败”
+                                        //
+                                        //登录时POST请求，OKHttp默认不会缓存，所以没有网时不会读取缓存，而是去
+                                        //读取网络数据，而使得出现错误，登录失败。因此不用判断登录时是否连网。
+                                        //
+                                        //但如果POST请求被设置了缓存，在未联网时“登录成功”后，由于没有设置cookie而使得后续
+                                        //收藏等操作会发生错误。此时也要先判断是否连网。
+                                        if (CommonUtils.isNetworkConnected()) {
+                                            myProgressDialog.setText("正在退出登录，请稍候……");
+                                            myProgressDialog.show();
+                                            getPresenter().logout();
+                                        } else {
+                                            CommonUtils.showToastMessage(MainActivity.this, "请连接网络后再试");
+                                        }
                                     }
                                 })
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -182,7 +246,10 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
-                                }).show();
+                                })
+                                .create();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();
                         break;
                     default:
                         break;
@@ -210,22 +277,27 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
             }
         });
     }
-    private void hideAllFragments(){
-        mFragmentTransaction=mFragmentManager.beginTransaction();
-        mHomeFragment= (HomeFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_HOME);
-        if(mHomeFragment!=null){
+
+    private void hideAllFragments() {
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mHomeFragment = (HomeFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_HOME);
+        if (mHomeFragment != null) {
             mFragmentTransaction.hide(mHomeFragment);
         }
-        mWeixinFragment=(WeixinFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN);
-        if(mWeixinFragment!=null){
+        mKnowledgeTabListsFragment = (KnowledgeTabListsFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_KNOWLEDGE);
+        if (mKnowledgeTabListsFragment != null) {
+            mFragmentTransaction.hide(mKnowledgeTabListsFragment);
+        }
+        mWeixinFragment = (WeixinFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_WEIXIN);
+        if (mWeixinFragment != null) {
             mFragmentTransaction.hide(mWeixinFragment);
         }
-        mProjectFragment=(ProjectFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_PROJECT);
-        if(mProjectFragment!=null){
+        mProjectFragment = (ProjectFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_PROJECT);
+        if (mProjectFragment != null) {
             mFragmentTransaction.hide(mProjectFragment);
         }
-        mNavigationFragment=(NavigationFragment)mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION);
-        if(mNavigationFragment!=null){
+        mNavigationFragment = (NavigationFragment) mFragmentManager.findFragmentByTag(TAG_PAGE_NAVIGATION);
+        if (mNavigationFragment != null) {
             mFragmentTransaction.hide(mNavigationFragment);
         }
         mFragmentTransaction.commitAllowingStateLoss();
@@ -273,7 +345,8 @@ public class MainActivity extends MVPBaseActivity<MainActivityContract.Presenter
                     ((WeixinFragment) fragment).jumpToTop();
                 } else if (fragment instanceof ProjectFragment) {
                     ((ProjectFragment) fragment).jumpToTop();
-                }
+                } else if (fragment instanceof KnowledgeTabListsFragment)
+                    ((KnowledgeTabListsFragment) fragment).jumpToTop();
             }
         }
     }

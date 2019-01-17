@@ -2,13 +2,17 @@ package com.huanglei.wanandroid.vp.articledetail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -51,12 +55,18 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
     public static void startArticleDetailActivity(Context context, String activityName, int id, String title, String link, boolean isCollected) {
         Intent intent = new Intent(context, ArticleDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putBoolean(ARTICLE_CAN_COLLECT, true);
-        bundle.putInt(ARTICLE_ID, id);
-        bundle.putString(ACTIVITY_NAME, activityName);
-        bundle.putString(ARTICLE_TITLE, title);
-        bundle.putString(ARTICLE_LINK, link);
-        bundle.putBoolean(ARTICLE_IS_COLLECTED, isCollected);
+        if (id >= 0) {
+            bundle.putBoolean(ARTICLE_CAN_COLLECT, true);
+            bundle.putInt(ARTICLE_ID, id);
+            bundle.putString(ACTIVITY_NAME, activityName);
+            bundle.putString(ARTICLE_TITLE, title);
+            bundle.putString(ARTICLE_LINK, link);
+            bundle.putBoolean(ARTICLE_IS_COLLECTED, isCollected);
+        } else {
+            bundle.putBoolean(ARTICLE_CAN_COLLECT, false);
+            bundle.putString(ARTICLE_TITLE, title);
+            bundle.putString(ARTICLE_LINK, link);
+        }
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -82,7 +92,7 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
     }
 
     @Override
-    public void showCollectFailed(boolean isLoginExpired,String errorMsg) {
+    public void showCollectFailed(boolean isLoginExpired, String errorMsg) {
         articleIsCollected = false;
         supportInvalidateOptionsMenu();
         CommonUtils.showToastMessage(this, errorMsg);
@@ -112,17 +122,14 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
         return R.layout.activity_article_detail;
     }
 
+
     @Override
-    protected void initToolbar() {
+    protected void initView() {
         getBundleData();
         setSupportActionBar(toolbarActivityArticleDetail);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         tvTitleActivityArticleDetail.setText(Html.fromHtml(articleTitle));
-    }
-
-    @Override
-    protected void initView() {
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(linearContentActivityArticleDetail, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()
@@ -215,6 +222,7 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
             finish();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_menu, menu);
@@ -263,4 +271,5 @@ public class ArticleDetailActivity extends MVPBaseActivity<ArticleDetailActivity
         }
         return true;
     }
+
 }

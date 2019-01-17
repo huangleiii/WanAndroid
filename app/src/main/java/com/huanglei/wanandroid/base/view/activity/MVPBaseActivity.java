@@ -27,7 +27,6 @@ public abstract class MVPBaseActivity<T extends IBasePresenter> extends AppCompa
         ButterKnife.bind(this);
         mPresenter = createPresenter();
         mPresenter.attachView(this);
-        initToolbar();
         initView();
         requestData();
     }
@@ -35,8 +34,6 @@ public abstract class MVPBaseActivity<T extends IBasePresenter> extends AppCompa
     protected abstract int getLayoutId();
 
     protected abstract T createPresenter();
-
-    protected abstract void initToolbar();
 
     protected abstract void initView();
 

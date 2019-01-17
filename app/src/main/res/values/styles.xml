@@ -5,7 +5,13 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="splashActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--windowfullscreen相当于设置了fullscreen标签、layout_fullscreen标签、stable标签、以及immersive_sticky标签-->
+        <item name="android:windowFullscreen">true</item>
+        <!--注意background属性会加在该主题下所有view上，而windowBackground不会-->
+        <item name="android:windowBackground">@drawable/layer_splash</item>
     </style>
     <style name="anim_activity_topright_to_bottomleft" parent="android:Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/activity_in</item>
@@ -30,6 +36,10 @@
     </style>
     <style name="SplashActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
+    </style>
+    <!--这里只能设置大小和颜色，不能设置字体，字体要在代码里设置-->
+    <style name="collapse" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

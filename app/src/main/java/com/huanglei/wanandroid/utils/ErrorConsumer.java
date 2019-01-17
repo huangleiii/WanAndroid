@@ -27,7 +27,8 @@ public abstract class ErrorConsumer<T extends Throwable> implements Consumer<T> 
         else if (t instanceof SocketTimeoutException)
             errorMessage = "请求超时";
         else
-            errorMessage = "未知错误";
+            errorMessage=t.toString();
+//            errorMessage = "未知错误";
         onError(errorCode, errorMessage);
     }
 

@@ -5,7 +5,8 @@
     android:id="@+id/drawer_layout_activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".vp.main.MainActivity">
+    tools:context=".vp.main.MainActivity"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -13,7 +14,8 @@
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_activity_main"
@@ -48,6 +50,7 @@
             android:layout_gravity="bottom|right"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="60dp"
+            app:backgroundTint="@color/colorPrimary"
             app:layout_behavior="@string/behavior_floatingactionbutton_hide"
             />
         <android.support.design.widget.BottomNavigationView
@@ -66,6 +69,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
+        android:fitsSystemWindows="true"
         android:id="@+id/navigation_activity_main"
         android:layout_width="250dp"
         android:layout_height="match_parent"

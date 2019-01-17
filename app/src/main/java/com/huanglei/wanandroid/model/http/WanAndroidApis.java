@@ -2,12 +2,13 @@ package com.huanglei.wanandroid.model.http;
 
 
 import com.huanglei.wanandroid.model.bean.Account;
-import com.huanglei.wanandroid.model.bean.ArticleInCollectPageList;
+import com.huanglei.wanandroid.model.bean.ArticleListInCollectPage;
 import com.huanglei.wanandroid.model.bean.Banner;
 import com.huanglei.wanandroid.model.bean.BaseResponse;
 import com.huanglei.wanandroid.model.bean.ArticleList;
 import com.huanglei.wanandroid.model.bean.HotKey;
 import com.huanglei.wanandroid.model.bean.HotWebsite;
+import com.huanglei.wanandroid.model.bean.KnowledgeTabList;
 import com.huanglei.wanandroid.model.bean.NavigationArticleList;
 import com.huanglei.wanandroid.model.bean.Tab;
 
@@ -66,7 +67,7 @@ public interface WanAndroidApis {
     Observable<BaseResponse<Object>> cancelCollectInCollectPage(@Path("id") int id, @Field("originId") int originId);
 
     @GET("lg/collect/list/{num}/json")
-    Observable<BaseResponse<ArticleInCollectPageList>> getCollectArticles(@Path("num") int num);
+    Observable<BaseResponse<ArticleListInCollectPage>> getCollectArticles(@Path("num") int num);
 
     @GET("navi/json")
     Observable<BaseResponse<List<NavigationArticleList>>> getNavigationLists();
@@ -82,5 +83,15 @@ public interface WanAndroidApis {
 
     @GET("wxarticle/list/{id}/{num}/json")
     Observable<BaseResponse<ArticleList>> getWxArticles(@Path("num") int num, @Path("id") int id);
+
+    @GET("tree/json")
+    Observable<BaseResponse<List<KnowledgeTabList>>> getKnowledgeTabLists();
+
+    @GET("article/list/{num}/json")
+    Observable<BaseResponse<ArticleList>> getKnowledgeArticleList(@Path("num") int num,@Query("cid")int id);
+
+    @POST("lg/collect/add/json")
+    @FormUrlEncoded
+    Observable<BaseResponse<Object>> collectOutsideArticle(@Field("title")String title,@Field("author")String author,@Field("link")String link);
 
 }

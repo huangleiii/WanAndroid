@@ -16,5 +16,6 @@ public class Constants {
     public static final String MAIN_ACTIVITY="main activity";
     public static final String SEARCH_LIST_ACTIVITY="search list activity";
     public static final String COLLECT_ACTIVITY="collect activity";
+    public static final String KNOWLEDGE_ACTIVITY="knowledge activity";
     public static final String ARTICLE_DETAIL_ACTIVITY="article detail activity";
 }

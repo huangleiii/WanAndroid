@@ -1,6 +1,5 @@
 package com.huanglei.wanandroid.vp.main;
 
-import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.presenter.RxMVPBasePresenter;
 import com.huanglei.wanandroid.contract.MainActivityContract;
 import com.huanglei.wanandroid.event.CancelCollectEvent;

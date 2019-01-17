@@ -30,9 +30,9 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
     ImageView imgCloseActivityHotWebsite;
     @BindView(R.id.flowlayout_activity_hot_website)
     TagFlowLayout flowlayoutActivityHotWebsite;
-    @BindView(R.id.loading)
+    @BindView(R.id.relativelayout_loading)
     RelativeLayout loading;
-    @BindView(R.id.retry_error)
+    @BindView(R.id.relativelayout_retry_error)
     RelativeLayout retryError;
     @BindView(R.id.normal)
     NestedScrollView normal;
@@ -43,13 +43,6 @@ public class HotWebsiteActivity extends MVPBaseActivity<HotWebsiteActivityContra
         return R.layout.activity_hot_website;
     }
 
-    @Override
-    protected void initToolbar() {
-//        setSupportActionBar(toolbarActivityHotWebsite);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        tvTitleActivityHotWebsite.setText("常用网站");
-    }
 
     @Override
     protected void initView() {

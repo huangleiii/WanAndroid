@@ -15,7 +15,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".vp.main.MainActivity">
+        <activity
+            android:name=".vp.main.MainActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".vp.login.LoginActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".vp.articledetail.ArticleDetailActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".vp.hotwebsite.HotWebsiteActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/RoundCornerDialogActivityTheme" />
+        <activity
+            android:name=".vp.search.SearchActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTop"
+            android:theme="@style/RoundCornerDialogActivityTheme" />
+        <activity
+            android:name=".vp.search.SearchListActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden" />
+        <activity
+            android:name=".vp.collect.CollectActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden" />
+        <activity
+            android:name=".vp.main.knowledge.KnowledgeActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden" />
+        <activity
+            android:name=".vp.SplashActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:theme="@style/splashActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,23 +58,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".vp.login.LoginActivity"
-            android:launchMode="singleTop" />
+            android:name=".vp.AboutUsActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden" />
         <activity
-            android:name=".vp.articledetail.ArticleDetailActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".vp.hotwebsite.HotWebsiteActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/RoundCornerDialogActivityTheme" />
-        <activity
-            android:name=".vp.search.SearchActivity"
-            android:launchMode="singleTop"
-            android:theme="@style/RoundCornerDialogActivityTheme" />
-        <activity android:name=".vp.search.SearchListActivity" />
-        <activity android:name=".vp.collect.CollectActivity" />
+            android:name=".vp.setting.SettingActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"></activity>
     </application>
 
 </manifest>

@@ -1,14 +1,20 @@
 package com.huanglei.wanandroid.vp.collect;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -16,10 +22,12 @@ import com.huanglei.wanandroid.R;
 import com.huanglei.wanandroid.app.Constants;
 import com.huanglei.wanandroid.base.view.activity.MVPBaseActivity;
 import com.huanglei.wanandroid.contract.CollectActivityContract;
+import com.huanglei.wanandroid.model.bean.Article;
 import com.huanglei.wanandroid.model.bean.ArticleInCollectPage;
 import com.huanglei.wanandroid.vp.articledetail.ArticleDetailActivity;
 import com.huanglei.wanandroid.utils.CommonUtils;
 import com.huanglei.wanandroid.vp.login.LoginActivity;
+import com.huanglei.wanandroid.widget.MyProgressDialog;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -46,6 +54,7 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
     private int page;
     private int clickPosition;
     private List<ArticleInCollectPage> beforeArticleList = new ArrayList<>();
+    private MyProgressDialog myProgressDialog;
 
     @Override
     public Context getViewContext() {
@@ -114,6 +123,26 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
     }
 
     @Override
+    public void showCollectOutsideArticleSucceed(String title,String author,String link) {
+        myProgressDialog.dismiss();
+        ArticleInCollectPage article=new ArticleInCollectPage();
+        article.setTitle(title);
+        article.setAuthor(author);
+        article.setLink(link);
+        article.setNiceDate("刚刚");
+        mAdapter.getData().add(0,article);
+        mAdapter.notifyItemInserted(0);
+        recyclerActivityCollect.smoothScrollToPosition(0);
+        CommonUtils.showToastMessage(this,"收藏成功");
+    }
+
+    @Override
+    public void showCollectOutsideArticleFailed(boolean isLoginExpired,String errorMsg) {
+        myProgressDialog.dismiss();
+        CommonUtils.showToastMessage(this,errorMsg);
+    }
+
+    @Override
     public void subscribeLoginEvent(String activityName) {
         if (activityName.equals(Constants.COLLECT_ACTIVITY))
             refreshView();
@@ -141,16 +170,14 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
         return new CollectActivityPresenter();
     }
 
+
     @Override
-    protected void initToolbar() {
+    protected void initView() {
+        myProgressDialog=new MyProgressDialog(this);
         setSupportActionBar(toolbarActivityCollect);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         tvTitleActivityCollect.setText("我的收藏");
-    }
-
-    @Override
-    protected void initView() {
         mAdapter = new CollectPageAdapter(this, new ArrayList<ArticleInCollectPage>());
         mAdapter.bindToRecyclerView(recyclerActivityCollect);
         recyclerActivityCollect.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -229,12 +256,48 @@ public class CollectActivity extends MVPBaseActivity<CollectActivityContract.Pre
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.collect_menu,menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.add_collect_menu:
+                View view=getLayoutInflater().inflate(R.layout.dialog_collect,null);
+                final EditText etTitle=view.findViewById(R.id.et_title_dialog_collect);
+                final EditText etAuthor=view.findViewById(R.id.et_author_dialog_collect);
+                final EditText etLink=view.findViewById(R.id.et_link_dialog_collect);
+                AlertDialog.Builder builder=new AlertDialog.Builder(this);
+                AlertDialog alertDialog=builder.setTitle("收藏自定义文章")
+                        .setView(view)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String title=etTitle.getText().toString();
+                                String author=etAuthor.getText().toString();
+                                String link=etLink.getText().toString();
+                                if(TextUtils.isEmpty(title)||TextUtils.isEmpty(author)||TextUtils.isEmpty(link)){
+                                    CommonUtils.showToastMessage(CollectActivity.this,"输入不能为空");
+                                }else {
+                                    getPresenter().collectOutsideArticle(title,author,link);
+                                    myProgressDialog.show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        }).create();
+                //可以通过getWindow的方式设置alertdialog的长宽gravity等。
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
                 break;
             default:
                 break;

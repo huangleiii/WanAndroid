@@ -45,9 +45,9 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
     TextView tvClearActivitySearch;
     @BindView(R.id.recycler_history_activity_search)
     RecyclerView recyclerHistoryActivitySearch;
-    @BindView(R.id.loading)
+    @BindView(R.id.relativelayout_loading)
     RelativeLayout loading;
-    @BindView(R.id.retry_error)
+    @BindView(R.id.relativelayout_retry_error)
     RelativeLayout retryError;
     private HistoryKeysAdapter historyKeysAdapter;
 
@@ -130,10 +130,6 @@ public class SearchActivity extends MVPBaseActivity<SearchActivityContract.Prese
         return R.layout.activity_search;
     }
 
-    @Override
-    protected void initToolbar() {
-
-    }
 
     @Override
     protected void initView() {

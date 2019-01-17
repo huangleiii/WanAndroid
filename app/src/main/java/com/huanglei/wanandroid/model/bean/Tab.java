@@ -1,10 +1,12 @@
 package com.huanglei.wanandroid.model.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by 黄垒 on 2019/1/11.
  */
 
-public class Tab {
+public class Tab implements Serializable {
     private int courseId;
     private int id;
     private String name;

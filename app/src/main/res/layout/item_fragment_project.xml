@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:clickable="true"
-        android:src="@drawable/ic_favorite_grey_24dp" />
+        android:src="@drawable/ic_favorite_light_grey_24dp" />
     <ImageView
         android:id="@+id/img_item_fragment_project"
         android:layout_width="100dp"

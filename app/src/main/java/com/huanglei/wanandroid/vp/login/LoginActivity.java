@@ -50,15 +50,17 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
     @BindView(R.id.et_repassword_activity_login)
     EditText etRepasswordActivityLogin;
     private MyProgressDialog mMyProgressDialog;
-    private static final String ACTIVITY_NAME="activity name";
+    private static final String ACTIVITY_NAME = "activity name";
     private String activityName;
-    public static void startLoginActivity(Context context,String activityName){
-        Intent intent=new Intent(context,LoginActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putString(ACTIVITY_NAME,activityName);
+
+    public static void startLoginActivity(Context context, String activityName) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTIVITY_NAME, activityName);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
+
     @Override
     protected LoginActivityContract.Presenter createPresenter() {
         return new LoginActivityPresenter();
@@ -70,16 +72,12 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
     }
 
     @Override
-    protected void initToolbar() {
+    protected void initView() {
         setSupportActionBar(toolbarActivityLogin);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void initView() {
-        if(getIntent().getExtras()!=null){
-            activityName=getIntent().getExtras().getString(ACTIVITY_NAME);
+        if (getIntent().getExtras() != null) {
+            activityName = getIntent().getExtras().getString(ACTIVITY_NAME);
         }
         showLogIn();
         mMyProgressDialog = new MyProgressDialog(LoginActivity.this);
@@ -90,9 +88,13 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
                         || TextUtils.isEmpty(etPasswordActivityLogin.getText()))
                     CommonUtils.showToastMessage(LoginActivity.this, "输入不能为空");
                 else {
-                    mMyProgressDialog.setText("正在登录，请稍候……").show();
-                    getPresenter().login(activityName,etAccountActivityLogin.getText().toString(),
-                            etPasswordActivityLogin.getText().toString());
+                    if (CommonUtils.isNetworkConnected()) {
+                        mMyProgressDialog.setText("正在登录，请稍候……").show();
+                        getPresenter().login(activityName, etAccountActivityLogin.getText().toString(),
+                                etPasswordActivityLogin.getText().toString());
+                    } else {
+                        CommonUtils.showToastMessage(LoginActivity.this, "请连接网络后再试");
+                    }
                 }
             }
         });
@@ -110,10 +112,14 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
                         || TextUtils.isEmpty(etRepasswordActivityLogin.getText()))
                     CommonUtils.showToastMessage(LoginActivity.this, "输入不能为空");
                 else {
-                    mMyProgressDialog.setText("正在注册，请稍候……").show();
-                    getPresenter().register(etAccountActivityLogin.getText().toString(),
-                            etPasswordActivityLogin.getText().toString(),
-                            etRepasswordActivityLogin.getText().toString());
+                    if (CommonUtils.isNetworkConnected()) {
+                        mMyProgressDialog.setText("正在注册，请稍候……").show();
+                        getPresenter().register(etAccountActivityLogin.getText().toString(),
+                                etPasswordActivityLogin.getText().toString(),
+                                etRepasswordActivityLogin.getText().toString());
+                    }else {
+                        CommonUtils.showToastMessage(LoginActivity.this,"请连接网络后再试");
+                    }
                 }
             }
         });
@@ -140,7 +146,6 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
     private void showRegister() {
         linRepasswordActivityLogin.setVisibility(View.VISIBLE);
         tvTitleActivityLogin.setText("注册");
-        etAccountActivityLogin.setText("");
         etPasswordActivityLogin.setText("");
         etRepasswordActivityLogin.setText("");
         tvRegisterActivityLogin.setVisibility(View.GONE);
@@ -153,7 +158,6 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
         linRepasswordActivityLogin.setVisibility(View.GONE);
         tvTitleActivityLogin.setText("登录");
         etPasswordActivityLogin.setText("");
-        etAccountActivityLogin.setText("");
         tvRegisterActivityLogin.setVisibility(View.VISIBLE);
         tvLogInActivityLogin.setVisibility(View.GONE);
         btnRegisterActivityLogin.setVisibility(View.GONE);
@@ -173,7 +177,7 @@ public class LoginActivity extends MVPBaseActivity<LoginActivityContract.Present
 
     @Override
     public void loginSucceed(Account account) {
-        getPresenter().setLoginStatus(true,account.getUsername());
+        getPresenter().setLoginStatus(true, account.getUsername());
         mMyProgressDialog.dismiss();
         CommonUtils.showToastMessage(this, "登录成功");
         finish();

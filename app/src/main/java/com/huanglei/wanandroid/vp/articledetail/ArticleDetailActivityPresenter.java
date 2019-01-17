@@ -28,11 +28,11 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+                        CollectEvent collectEvent = new CollectEvent();
+                        collectEvent.setActivityName(activityName);
+                        RxBus.getInstance().post(collectEvent);
                         if (isViewAttached()) {
                             getView().showCollectSucceed();
-                            CollectEvent collectEvent = new CollectEvent();
-                            collectEvent.setActivityName(activityName);
-                            RxBus.getInstance().post(collectEvent);
                         }
                     }
                 }, new ErrorConsumer<Throwable>() {
@@ -45,7 +45,7 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                             isLoginExpired=true;
                         }
                         if (isViewAttached()) {
-                            getView().showCancelCollectFailed(isLoginExpired,errorMessage);
+                            getView().showCollectFailed(isLoginExpired,errorMessage);
                         }
                     }
                 }));
@@ -60,11 +60,11 @@ public class ArticleDetailActivityPresenter extends RxMVPBasePresenter<ArticleDe
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+                        CancelCollectEvent cancelCollectEvent = new CancelCollectEvent();
+                        cancelCollectEvent.setActivityName(activityName);
+                        RxBus.getInstance().post(cancelCollectEvent);
                         if (isViewAttached()) {
                             getView().showCancelCollectSucceed();
-                            CancelCollectEvent cancelCollectEvent = new CancelCollectEvent();
-                            cancelCollectEvent.setActivityName(activityName);
-                            RxBus.getInstance().post(cancelCollectEvent);
                         }
                     }
                 }, new ErrorConsumer<Throwable>() {
